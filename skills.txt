@@ -1,0 +1,116 @@
+FactSet
+vLLM
+Webpack
+Testing
+Go
+SAP
+Stakeholder Management
+Redis
+Transformers
+React
+Food Safety
+TensorFlow
+People Management
+Jest
+CSS3
+Tailwind
+MySQL
+Team Leadership
+Equity Research
+GAAP
+CI/CD
+Docker
+Capital IQ
+Optimization
+Python
+Next.js
+Testing Library
+Java
+Evaluation
+Plating
+Git
+PowerBI
+Wine Pairing
+Farm-to-Table
+Risk Management
+FastAPI
+Data Visualization
+scikit-learn
+Node.js
+Experimentation
+HTML5
+AI Systems
+Kubernetes
+Lightning
+Reconciliations
+Corporate Finance
+PostgreSQL
+PyTorch
+Fermentation
+Knife Skills
+Fusion Cooking
+Spring Boot
+Thai Cuisine
+Pitchbooks
+Cost Control
+Portfolio Management
+Risk Analysis
+Data Engineering
+Portfolio Construction
+Sous-vide
+CUDA
+PowerPoint
+Microservices
+Menu Design
+UI/UX
+Market Research
+Vertex AI
+Distributed Training
+Roadmapping
+Hiring
+M&A
+Prompt Engineering
+RAG
+Representation Learning
+Risk Models
+RabbitMQ
+Sauces
+Pastry Basics
+Investment Strategies
+TypeScript
+gRPC
+Inventory
+Audit Support
+Valuation
+Multimodal
+Bloomberg Terminal
+GCP
+Paper Writing
+LLMs
+Retrieval
+Figma
+Accessibility
+NLP
+Financial Modeling
+Weights & Biases
+Consolidations
+Storybook
+Italian Cuisine
+Deep Learning
+Tax
+IFRS
+GraphQL
+Vite
+JavaScript
+Bloomberg
+Menu Engineering
+AWS
+Culinary Innovation
+MLOps
+Excel
+Express
+SQL
+Accounting
+Delivery
+Kafka
+Ray

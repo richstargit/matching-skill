@@ -1,0 +1,101 @@
+{
+  "personalInfo": {
+    "fullName": "Elena Popov",
+    "phone": "+7 999 123-45-67",
+    "email": "elena.popov@example.com",
+    "address": "Berlin, Germany",
+    "birthDate": "1986-10-18",
+    "currentSalary": 0,
+    "expectedSalary": 0
+  },
+  "skills": [
+    "People Management",
+    "Roadmapping",
+    "Delivery",
+    "AI Systems",
+    "Hiring",
+    "Stakeholder Management"
+  ],
+  "experiences": [
+    {
+      "id": "1",
+      "role": "AI Engineering Manager",
+      "company": "Lumina AI",
+      "startDate": {
+        "month": "May",
+        "year": "2020"
+      },
+      "endDate": null,
+      "description": "Managed a team of 12 AI/ML engineers and data scientists.\nLaunched 3 LLM features increasing ARR by 9%.",
+      "isCurrentRole": true
+    },
+    {
+      "id": "2",
+      "role": "Senior Machine Learning Engineer",
+      "company": "Zalando",
+      "startDate": {
+        "month": "Jan",
+        "year": "2018"
+      },
+      "endDate": {
+        "month": "Apr",
+        "year": "2020"
+      },
+      "description": "Led the development of a personalized product recommendation engine.\nMentored junior engineers and established best practices for code reviews.",
+      "isCurrentRole": false
+    }
+  ],
+  "education": [
+    {
+      "id": "1",
+      "degree": "Mba",
+      "institution": "INSEAD",
+      "faculty": "Business",
+      "major": "Technology Management",
+      "startDate": {
+        "month": "2016",
+        "year": "2017"
+      },
+      "endDate": null,
+      "gpa": "",
+      "isCurrentlyStudying": false
+    },
+    {
+      "id": "2",
+      "degree": "Master",
+      "institution": "Technical University of Munich",
+      "faculty": "Computer Science",
+      "major": "Artificial Intelligence",
+      "startDate": {
+        "month": "2012",
+        "year": "2014"
+      },
+      "endDate": null,
+      "gpa": "",
+      "isCurrentlyStudying": false
+    }
+  ],
+  "certificates": [
+    {
+      "id": "1",
+      "name": "Scrum Master (PSM I)"
+    }
+  ],
+  "achievement": [
+    {
+      "id": "1",
+      "title": "LLM Roadmap 2024",
+      "description": "Strategy and roll-out plan for generative features.",
+      "technologies": [],
+      "link": "",
+      "startDate": {
+        "month": "Sep",
+        "year": "2023"
+      },
+      "endDate": {
+        "month": "Mar",
+        "year": "2024"
+      }
+    }
+  ]
+}
