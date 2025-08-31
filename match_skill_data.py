@@ -105,7 +105,8 @@ skills_data = {
     "Cost Control": ["Accounting"],
 
     # Soft Skills / Management
-    "Team Leadership": [],
+    "Teamwork":[],
+    "Team Leadership": ["Teamwork"],
     "People Management": ["Team Leadership"],
     "Stakeholder Management": ["Team Leadership"],
     "Hiring": ["Team Leadership"],

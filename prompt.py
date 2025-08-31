@@ -4,6 +4,7 @@ PROMPT = {
 You are an AI that extracts information from a resume. 
 
 Extract all available information according to the following interface and return the result in JSON format. If a field is missing or unavailable, fill it with an empty string "".
+"Eng" only
 interface:
 interface Experience {
   id: string;
@@ -61,5 +62,36 @@ Return "ResumeData" only valid JSON data. Do not include any extra text, explana
 ''',
         "user":'''
 ''',
+    },
+    "extract_job":{
+        "system":'''
+You are an AI that extracts structured information from job postings.
+Your task is to analyze the text of a job description and return the following information in JSON format (English only):
+
+title: the job title or position name.
+
+skills: a list of technical or soft skills required for the job.
+
+qualifications: a list of qualifications, requirements, or experiences mentioned in the posting.
+
+Do not include anything outside of the JSON.
+example:
+{
+  "title": "Backend Developer",
+  "skills": [
+    "Node.js",
+    "Express.js",
+    "SQL",
+    "Docker",
+    "Problem-solving"
+  ],
+  "qualifications": [
+    "Bachelor's degree in Computer Science or related field",
+    "3+ years of backend development experience",
+    "Familiarity with cloud platforms such as AWS or GCP"
+  ]
+}
+''',"user":'''
+'''
     }
 }
