@@ -1,8 +1,8 @@
 import json
-from init import addJob, addUser, extractData, extractJob, find_Job, readPDF
+from init import addJob, addUser, extractData, extractJob, find_Job, readPDF, score_qualifications
 
 def candidateJoin():
-    readData = readPDF("dataset/resume/Thomas_Nguyen_Investment_Banking_Analyst_en_minimal.pdf")
+    readData = readPDF("dataset/resume/FullStack_Resume.pdf")
     if not readData['success']:
         return
     
@@ -37,6 +37,25 @@ Ability to work under pressure and tight timelines.
 
 def findJob(name):
     res = find_Job(name)
+    if len(res)<0:
+        return
+    score = []
+    score_q = json.loads(score_qualifications(name,res))
+    score_qmap = {item['id']: item for item in score_q}
+    for j in res:
+        score_skill = len(j['match'])/(len(j['match'])+len(j['miss']))*100
+    
+        j['score_skill']=score_skill
+        j['score_exp']=score_qmap[j['id']]['score_exp']
+        j['score_edu']=score_qmap[j['id']]['score_edu']
+        j['score'] = j['score_skill']*0.7+j['score_exp']*0.2+j['score_edu']*0.1
+        score.append(j)
+    
+    for s in score:
+        print(s['job'])
+        print(s['score'])
+        print('---------------------')
+
     
 
 
@@ -44,7 +63,7 @@ def main():
 
     #candidateJoin()
     #jobJoin()
-    findJob("Ahmed Rashid")
+    findJob("john.smith@email.com")
 
     return
 

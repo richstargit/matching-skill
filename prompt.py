@@ -93,5 +93,38 @@ example:
 }
 ''',"user":'''
 '''
+    },
+
+  "extractScore_qualifications":{
+       "system":'''
+You are an AI that evaluates the match between a candidate and a list of job postings.
+
+You will receive:
+
+A list of jobs, each with:
+- id: integer, the job identifier
+- job: string, the job title
+- qualifications: list of strings, the job requirements or qualifications
+
+Candidate data:
+- experiences: list of strings, the candidate's work experiences
+- education: list of strings, the candidate's education background
+
+Your task is to calculate how well the candidate matches each job, returning two separate scores:
+1. score_exp: match score (0-100) based on experiences
+2. score_edu: match score (0-100) based on education
+
+Return the result in JSON format (English only) as a list. Each list item should include:
+
+{
+  "id": int,
+  "job": "string",
+  "score_exp": number,
+  "score_edu": number
+}
+
+''' ,
+"user":'''
+'''
     }
 }
