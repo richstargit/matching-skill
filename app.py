@@ -2,7 +2,7 @@ import json
 from init import addJob, addUser, extractData, extractJob, find_Job, readPDF, score_qualifications
 
 def candidateJoin():
-    readData = readPDF("dataset/resume/FullStack_Resume.pdf")
+    readData = readPDF("dataset/resume/Backend_Developer_Resume.pdf")
     if not readData['success']:
         return
     
@@ -12,23 +12,39 @@ def candidateJoin():
 
 def jobJoin():
     readData = '''
-Back-end / Full Stack Developer (Golang)
-Responsibilities :
- To analysis requirement, identify system impact, design solutions, and transform to technical task specification that support efficient and effective business operation work.  
-Closely working with business users to understand business needs, provide consultant and support. 
-To lead architecture system design for business enhancement and fixing any production issues with ensure the system performance and stability.    
-To lead system analyst/full stack developer include design, coding, testing and prepare deployment. 
-To help the team with problem solving on any technical issues. 
-To design, coding and testing the application programs. 
-To support production, investigate and fix any issues. 
-Qualifications :
-Bachelor's Degree / Master's Degree (IT, Computer Engineering, Computer Science, MBA, Economics, or related fields.)
-2-5 years’ experience in system analyst, and/or development. 
-Experience in java, angular, react and GO development.
-Experience intrading business especially in structure note, single block trade is a plus. 
-Experience in CI/CD, Kubernetes is a plus.   
-Teamwork, problem solving and good communication skills.
-Ability to work under pressure and tight timelines. 
+Company: CloudWorks Solutions
+Location: Remote (Work from anywhere)
+Employment Type: Full-time
+Level: Mid-Level
+Salary: 45,000 – 70,000 THB/month (based on experience)
+Benefits:
+Remote work allowance
+Health & wellness package
+Paid annual leave + national holidays
+Performance-based bonus
+Laptop and equipment provided
+Job Summary:
+As a Backend Developer at CloudWorks Solutions, you will be responsible for building and maintaining scalable backend systems to support our enterprise cloud solutions. You will work with cross-functional teams to design APIs, manage databases, and optimize performance.
+Responsibilities:
+Design, develop, and maintain backend systems using Node.js and Python
+Build and document RESTful and GraphQL APIs
+Manage and optimize databases (MongoDB, PostgreSQL)
+Implement security and data protection best practices
+Deploy applications using Docker and cloud services (AWS, GCP, Azure)
+Collaborate with frontend and DevOps teams to deliver high-quality software
+Requirements (Must-have):
+Bachelor’s degree in Computer Science, Information Technology, or related field
+2+ years of experience in backend development with Node.js or Python
+Proficiency in database design and query optimization (SQL/NoSQL)
+Experience with Git and version control workflows
+Knowledge of software development lifecycle (SDLC)
+Nice-to-have:
+Experience with Docker, Kubernetes, or other containerization tools
+Familiarity with CI/CD pipelines (Jenkins, GitHub Actions, GitLab CI)
+Knowledge of microservices architecture
+Previous experience with Agile methodology
+Closing Date: October 15, 2025
+How to Apply: Submit your resume and cover letter to jobs@cloudworks.io
     '''
 
     res = extractJob(readData).strip("`").replace("json", "", 1).strip()
@@ -60,10 +76,14 @@ def findJob(name):
 
 
 def main():
-
-    #candidateJoin()
-    #jobJoin()
-    findJob("john.smith@email.com")
+    while(1):
+        c = input("key:")
+        if c=='1':
+            candidateJoin()
+        elif c=='2':
+            jobJoin()
+        else:
+            findJob("daniel.lee@email.com")
 
     return
 

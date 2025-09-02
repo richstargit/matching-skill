@@ -24,6 +24,17 @@ def readPDF(path:str):
         return  {"success": True, "data": text}
     except Exception:
         return {"success": False, "data": "error"}
+    
+def readPDFwithFile(file):
+    try:
+        reader = PyPDF2.PdfReader(file)
+        text=""
+        # อ่านทีละหน้า
+        for _, page in enumerate(reader.pages):
+            text += page.extract_text()
+        return  {"success": True, "data": text}
+    except Exception:
+        return {"success": False, "data": "error"}
 
 def extractData(text:str):
 
