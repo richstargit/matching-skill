@@ -1,11 +1,11 @@
 import json
-from sentence_transformers import SentenceTransformer
+#from sentence_transformers import SentenceTransformer
 from connectGraphDB import connectGraph
 from match_skill_data import skills_data
 
 driver = connectGraph()
 
-model = SentenceTransformer('all-MiniLM-L6-v2')
+#model = SentenceTransformer('all-MiniLM-L6-v2')
 
 def add_skill(tx, skill_name, embedding):
     tx.run("""
@@ -52,8 +52,9 @@ def build_graph():
     with driver.session() as session:
         # เพิ่ม skill nodes
         for skill in skills_data.keys():
-            embedding = model.encode([skill])[0].tolist()  # แปลงเป็น list เพื่อเก็บใน Neo4j
-            session.write_transaction(add_skill, skill, embedding)
+            #embedding = model.encode([skill])[0].tolist()  # แปลงเป็น list เพื่อเก็บใน Neo4j
+            #session.write_transaction(add_skill, skill, embedding)
+            session.write_transaction(add_skill, skill, "embedding")
 
         # เพิ่ม relations skill->skill
         for skill, related_skills in skills_data.items():
@@ -63,8 +64,9 @@ def build_graph():
         exps_data = get_exp()
         #เพิ่ม node exp
         for exp in exps_data.keys():
-            embedding = model.encode([exp])[0].tolist()
-            session.write_transaction(add_exp,exp,embedding)
+            #embedding = model.encode([exp])[0].tolist()
+            #session.write_transaction(add_exp,exp,embedding)
+            session.write_transaction(add_exp,exp,"embedding")
         #เพิ่ม relation exp->skill
         for exp,related in exps_data.items():
             for r in related:

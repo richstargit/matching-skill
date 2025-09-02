@@ -4,14 +4,14 @@ from openai import OpenAI
 
 import os
 from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer
+#from sentence_transformers import SentenceTransformer
 
 from connectGraphDB import connectGraph
 from prompt import PROMPT
 load_dotenv()
 
 TYPHOON_KEY = os.getenv("TYPHOON_KEY")
-model = SentenceTransformer('all-MiniLM-L6-v2')
+#model = SentenceTransformer('all-MiniLM-L6-v2')
 
 def readPDF(path:str):
     try:
@@ -138,17 +138,17 @@ def addUser(userdata):
 
         #add skills
         for skill in userdata['skills']:
-            query_emb = model.encode([skill])[0].tolist()
-            result = session.run("""
-                CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
-                YIELD node, score
-                RETURN node.name AS name, score
-            """, top_k=1, embedding=query_emb)
-            result = list(result)
-            if float(result[0]["score"])<0.75:
-                continue
+            # query_emb = model.encode([skill])[0].tolist()
+            # result = session.run("""
+            #     CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
+            #     YIELD node, score
+            #     RETURN node.name AS name, score
+            # """, top_k=1, embedding=query_emb)
+            # result = list(result)
+            # if float(result[0]["score"])<0.75:
+            #     continue
 
-            session.write_transaction(add_relation_usertoskill,userdata['personalInfo']['email'],result[0]["name"])
+            session.write_transaction(add_relation_usertoskill,userdata['personalInfo']['email'],skill)
     driver.close()
 
 def addJob(jobdata):
@@ -159,17 +159,17 @@ def addJob(jobdata):
 
         #add skills
         for skill in jobdata['skills']:
-            query_emb = model.encode([skill])[0].tolist()
-            result = session.run("""
-                CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
-                YIELD node, score
-                RETURN node.name AS name, score
-            """, top_k=1, embedding=query_emb)
-            result = list(result)
-            if float(result[0]["score"])<0.75:
-                continue
+            # query_emb = model.encode([skill])[0].tolist()
+            # result = session.run("""
+            #     CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
+            #     YIELD node, score
+            #     RETURN node.name AS name, score
+            # """, top_k=1, embedding=query_emb)
+            # result = list(result)
+            # if float(result[0]["score"])<0.75:
+            #     continue
 
-            session.write_transaction(add_relation_jobtoskill,jobdata['title'],result[0]["name"])
+            session.write_transaction(add_relation_jobtoskill,jobdata['title'],skill)
     driver.close()
 
 def find_Job(name):

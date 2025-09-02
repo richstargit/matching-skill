@@ -138,4 +138,16 @@ skills_data = {
     "Optimization": ["Machine Learning"],
     "Roadmapping": ["Team Leadership"],
     "Delivery": ["Team Leadership"],
+
+    # Programming Languages
+    "Dart": [],
+    "Kotlin": [],
+    "Swift": [],
+
+    # Frameworks / Libraries
+    "Flutter": ["Dart"],
+
+    # Native Platforms
+    "Android Development": ["Flutter","Kotlin"],
+    "iOS Development": ["Flutter","Swift"],
 }

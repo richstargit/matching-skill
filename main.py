@@ -1,13 +1,23 @@
 import json
-import shutil
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel
-import os
-
+from fastapi.middleware.cors import CORSMiddleware
 from connectGraphDB import connectGraph
 from init import addJob, addUser, extractData, extractJob, find_Job, readPDF, readPDFwithFile, score_qualifications
 
 app = FastAPI()
+
+origins = [
+    "*"  # หรือใส่เฉพาะโดเมน เช่น "http://localhost:3000", "https://996964f0140c.ngrok-free.app"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,           # อนุญาตโดเมนไหนเข้าถึง API
+    allow_credentials=True,
+    allow_methods=["*"],             # อนุญาต method GET, POST, PUT, DELETE
+    allow_headers=["*"],             # อนุญาต headers ทั้งหมด
+)
 
 # GET API
 @app.get("/")
@@ -92,3 +102,36 @@ RETURN {
     driver.close()
 
     return {"jobs": jobs}
+
+@app.get("/candidate")
+def getCandidate():
+    driver = connectGraph()
+    query = """
+    MATCH (c:Candidate)
+OPTIONAL MATCH (c)-[:HAVE_SKILL]->(s:Skill)
+OPTIONAL MATCH (s)-[:HAS_SKILL*]->(related:Skill)
+WITH c, collect(DISTINCT s.name) + collect(DISTINCT related.name) AS skills
+RETURN c.name AS name, skills,
+       coalesce(c.experiences, '[]') AS experiences,
+       coalesce(c.education, '[]') AS education,
+       coalesce(c.certificates, '[]') AS certificates,
+       coalesce(c.achievement, '[]') AS achievements,
+       coalesce(c.personalInfo, '{}') AS personalInfo
+    """
+    
+    candidates = []
+    with driver.session() as session:
+        result = session.run(query)
+        for record in result:
+            candidates.append({
+                "name": record["name"],
+                "skills": record["skills"],  # skills จาก relation
+                "experiences": json.loads(record["experiences"]) if record["experiences"] else [],
+                "education": json.loads(record["education"]) if record["education"] else [],
+                "certificates": json.loads(record["certificates"]) if record["certificates"] else [],
+                "achievements": json.loads(record["achievements"]) if record["achievements"] else [],
+                "personalInfo": json.loads(record["personalInfo"]) if record["personalInfo"] else {}
+            })
+    driver.close()
+    return {"candidates": candidates}
+    
