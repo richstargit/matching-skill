@@ -74,6 +74,8 @@ async def addjob(candidate: Candidate):
         j['score_skill']=score_skill
         j['score_exp']=score_qmap[j['id']]['score_exp']
         j['score_edu']=score_qmap[j['id']]['score_edu']
+        j['exp_reasons'] = score_qmap[j['id']].get('exp_reasons', [])
+        j['edu_reasons'] = score_qmap[j['id']].get('edu_reasons', [])
         j['score'] = j['score_skill']*0.7+j['score_exp']*0.2+j['score_edu']*0.1
         score.append(j)
     return {"isSuccess":True,  "result": score}

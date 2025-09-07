@@ -2,6 +2,7 @@ PyPDF2
 python-dotenv
 neo4j
 openai 
+sentence-transformers
 fastapi
 uvicorn
 python-multipart

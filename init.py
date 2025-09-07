@@ -4,14 +4,14 @@ from openai import OpenAI
 
 import os
 from dotenv import load_dotenv
-#from sentence_transformers import SentenceTransformer
 
 from connectGraphDB import connectGraph
+from connect_model import MODEL_RAG
 from prompt import PROMPT
 load_dotenv()
 
 TYPHOON_KEY = os.getenv("TYPHOON_KEY")
-#model = SentenceTransformer('all-MiniLM-L6-v2')
+model = MODEL_RAG
 
 def readPDF(path:str):
     try:
@@ -94,12 +94,14 @@ def extractJob(text:str):
 
 def add_user(tx, userdata):
     tx.run("""
-        MERGE (c:Candidate {name: $name})
-        SET c.personalInfo = $personalInfo,
-            c.experiences = $experiences,
-            c.education = $education,
-            c.certificates = $certificates,
-            c.achievement = $achievement
+        CREATE (c:Candidate {
+            name: $name,
+            personalInfo: $personalInfo,
+            experiences: $experiences,
+            education: $education,
+            certificates: $certificates,
+            achievement: $achievement
+        })
     """,
     name=userdata['personalInfo']['email'],
     personalInfo=json.dumps(userdata['personalInfo']),
@@ -111,9 +113,13 @@ def add_user(tx, userdata):
 
 def add_job(tx, jobdata):
     tx.run("""
-        MERGE (j:Job {name: $name})
-        SET j.qualifications = $qualifications
-    """, name=jobdata['title'],qualifications=jobdata['qualifications'])
+        CREATE (j:Job {
+            name: $name,
+            qualifications: $qualifications
+        })
+    """, 
+    name=jobdata['title'],
+    qualifications=jobdata['qualifications'])
 
 def add_relation_usertoskill(tx, user,skill):
     tx.run("""
@@ -138,17 +144,17 @@ def addUser(userdata):
 
         #add skills
         for skill in userdata['skills']:
-            # query_emb = model.encode([skill])[0].tolist()
-            # result = session.run("""
-            #     CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
-            #     YIELD node, score
-            #     RETURN node.name AS name, score
-            # """, top_k=1, embedding=query_emb)
-            # result = list(result)
-            # if float(result[0]["score"])<0.75:
-            #     continue
+            query_emb = model.encode([skill.lower()])[0].tolist()
+            result = session.run("""
+                CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
+                YIELD node, score
+                RETURN node.name AS name, score
+            """, top_k=1, embedding=query_emb)
+            result = list(result)
+            if float(result[0]["score"])<0.75:
+                continue
 
-            session.write_transaction(add_relation_usertoskill,userdata['personalInfo']['email'],skill)
+            session.write_transaction(add_relation_usertoskill,userdata['personalInfo']['email'],result[0]["name"])
     driver.close()
 
 def addJob(jobdata):
@@ -159,17 +165,17 @@ def addJob(jobdata):
 
         #add skills
         for skill in jobdata['skills']:
-            # query_emb = model.encode([skill])[0].tolist()
-            # result = session.run("""
-            #     CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
-            #     YIELD node, score
-            #     RETURN node.name AS name, score
-            # """, top_k=1, embedding=query_emb)
-            # result = list(result)
-            # if float(result[0]["score"])<0.75:
-            #     continue
+            query_emb = model.encode([skill.lower()])[0].tolist()
+            result = session.run("""
+                CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
+                YIELD node, score
+                RETURN node.name AS name, score
+            """, top_k=1, embedding=query_emb)
+            result = list(result)
+            if float(result[0]["score"])<0.75:
+                continue
 
-            session.write_transaction(add_relation_jobtoskill,jobdata['title'],skill)
+            session.write_transaction(add_relation_jobtoskill,jobdata['title'],result[0]["name"])
     driver.close()
 
 def find_Job(name):

@@ -66,16 +66,16 @@ Return "ResumeData" only valid JSON data. Do not include any extra text, explana
     "extract_job":{
         "system":'''
 You are an AI that extracts structured information from job postings.
-Your task is to analyze the text of a job description and return the following information in JSON format (English only):
-
+Analyze the text of a job description and return the following information in JSON format (English only):
 title: the job title or position name.
-
-skills: a list of technical or soft skills required for the job.
-
+skills: a list of technical or soft skills required for the job. Include full names of frameworks, libraries, platforms, and tools (e.g., “Next.js”, “Express.js”, “React”, “AWS”).
 qualifications: a list of qualifications, requirements, or experiences mentioned in the posting.
-
-Do not include anything outside of the JSON.
-example:
+Requirements:
+Only include skills and qualifications explicitly mentioned in the job description.
+Use the exact wording for technical tools, frameworks, and programming languages.
+Do not include inferred or assumed skills.
+Return only valid JSON.
+Example output:
 {
   "title": "Backend Developer",
   "skills": [
@@ -110,9 +110,20 @@ Candidate data:
 - experiences: list of strings, the candidate's work experiences
 - education: list of strings, the candidate's education background
 
-Your task is to calculate how well the candidate matches each job, returning two separate scores:
+Your task is to calculate how well the candidate matches each job, returning the following:
+
 1. score_exp: match score (0-100) based on experiences
 2. score_edu: match score (0-100) based on education
+3. exp_reasons: a list of objects that show comparisons between job requirements and candidate experiences.  
+   Each object must have:
+   - job: the requirement from the job
+   - candidate: the most relevant candidate experience (or "missing" if none found)
+   - isMatch: true if the candidate meets the requirement, false otherwise
+4. edu_reasons: a list of objects that show comparisons between job requirements and candidate education.  
+   Each object must have:
+   - job: the requirement from the job
+   - candidate: the most relevant candidate education (or "missing" if none found)
+   - isMatch: true if the candidate meets the requirement, false otherwise
 
 Return the result in JSON format (English only) as a list. Each list item should include:
 
@@ -120,7 +131,15 @@ Return the result in JSON format (English only) as a list. Each list item should
   "id": int,
   "job": "string",
   "score_exp": number,
-  "score_edu": number
+  "score_edu": number,
+  "exp_reasons": [
+    {"job": "string", "candidate": "string", "isMatch": bool},
+    ...
+  ],
+  "edu_reasons": [
+    {"job": "string", "candidate": "string", "isMatch": bool},
+    ...
+  ]
 }
 
 ''' ,
