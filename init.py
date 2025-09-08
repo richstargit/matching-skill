@@ -233,7 +233,7 @@ def score_qualifications(name,jobdata):
     with driver.session() as session:
         record = session.run("""
             MATCH (c:Candidate {name: $name})
-            RETURN c.experiences AS experiences,c.education AS education
+            RETURN c.experiences AS experiences,c.education AS education,c.achievement AS achievement
         """, name=name).single()
         if not record:
             return []
@@ -241,7 +241,9 @@ def score_qualifications(name,jobdata):
     experiences = json.loads(experiences_json)
     education_json = record["education"]
     education = json.loads(education_json)
-    res = extractScore_qualifications({"experiences":experiences,"education":education},[{"id":j["id"],"job":j["job"],"qualifications":j['qualifications']} for j in jobdata]).strip("`").replace("json", "", 1).strip()
+    achievement_json = record['achievement']
+    achievement = json.loads(achievement_json)
+    res = extractScore_qualifications({"experiences":experiences,"education":education,"achievement":achievement},[{"id":j["id"],"job":j["job"],"qualifications":j['qualifications']} for j in jobdata]).strip("`").replace("json", "", 1).strip()
     driver.close()
     return res
 

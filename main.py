@@ -74,8 +74,26 @@ async def addjob(candidate: Candidate):
         j['score_skill']=score_skill
         j['score_exp']=score_qmap[j['id']]['score_exp']
         j['score_edu']=score_qmap[j['id']]['score_edu']
+        j['score_ach']=score_qmap[j['id']]['score_ach']
         j['exp_reasons'] = score_qmap[j['id']].get('exp_reasons', [])
         j['edu_reasons'] = score_qmap[j['id']].get('edu_reasons', [])
+        j['ach_reasons'] = score_qmap[j['id']].get('ach_reasons', [])
+
+        score_min = min(j['score_skill'], j['score_exp'], j['score_edu'])
+
+        if j['score_skill']== score_min:
+            j['score_skill']+=j['score_ach']*0.1
+            if j['score_skill']>100:
+                j['score_skill']=100
+        elif j['score_exp']== score_min:
+            j['score_exp']+=j['score_ach']*0.1
+            if j['score_exp']>100:
+                j['score_exp']=100
+        else :
+            j['score_edu']+=j['score_ach']*0.1
+            if j['score_edu']>100:
+                j['score_edu']=100
+
         j['score'] = j['score_skill']*0.7+j['score_exp']*0.2+j['score_edu']*0.1
         score.append(j)
     return {"isSuccess":True,  "result": score}
