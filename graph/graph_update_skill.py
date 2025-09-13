@@ -1,12 +1,12 @@
 import json
 import os
 import time
-from connectGraphDB import connectGraph
-from connect_model import MODEL_RAG
+from connect.connectGraphDB import connectGraph
+from connect.connect_model import MODEL_RAG
 from graph import add_exp, add_relation_exptoskill, add_relation_skilltoskill, add_skill, get_exp
 from init import extractJob
 
-from skill_relation import DATA_SKILL
+from relation.skill_relation import DATA_SKILL
 
 driver = connectGraph()
 

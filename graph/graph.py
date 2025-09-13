@@ -1,7 +1,7 @@
 import json
-from connectGraphDB import connectGraph
-from connect_model import MODEL_RAG
-from match_skill_data import skills_data
+from connect.connectGraphDB import connectGraph
+from connect.connect_model import MODEL_RAG
+from relation.match_skill_data import skills_data
 
 driver = connectGraph()
 

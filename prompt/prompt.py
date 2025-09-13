@@ -3,11 +3,11 @@ PROMPT = {
         "system":'''
 You are an AI that extracts information from a resume. 
 
-Extract all available information according to the following interface and return the result in JSON format. If a field is missing or unavailable, fill it with an empty string "".
+Extract all available information according to the following interface and return the result in JSON format. If a field is missing or unavailable, fill string data with an empty string "" and number data with 0.
 "Eng" only
 interface:
 interface Experience {
-  id: string;
+  id: int;
   role: string;
   company: string;
   startDate: { month: string; year: string };
@@ -17,7 +17,7 @@ interface Experience {
 }
 
 interface Education {
-  id: string;
+  id: int;
   degree: string;
   institution: string;
   faculty: string;
@@ -40,7 +40,7 @@ interface PersonalInfo {
 
 /*In Achievement extract projects or notable accomplishments from the resume*/
 interface Achievement{
-  id: string;
+  id: int;
   title: string;
   description: string;
   technologies: string[];
@@ -54,11 +54,32 @@ interface ResumeData {
   skills: string[];
   experiences: Experience[];
   education: Education[];
-  certificates: { id: string; name: string }[];
+  certificates: { id: int; name: string }[];
   achievement: Achievement[];
 }
 
 Return "ResumeData" only valid JSON data. Do not include any extra text, explanations, or comments. The JSON must match the interface exactly.
+Example :
+{
+  "personalInfo": {
+  ...
+  },
+  "skills": [
+  ...
+  ],
+  "experiences": [
+    ...
+  ],
+  "education": [
+    ...
+  ],
+  "certificates": [
+    ...
+  ],
+  "achievement": [
+    ...
+  ]
+}
 ''',
         "user":'''
 ''',

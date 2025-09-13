@@ -2,21 +2,21 @@ import json
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-from connectGraphDB import connectGraph
-from init import addJob, addUser, extractData, extractJob, find_Job, readPDF, readPDFwithFile, score_qualifications
+from connect.connectGraphDB import connectGraph
+from init import addJob, addUser, extractData, extractData_GPT, extractJob, extractJob_GPT, find_Job, readPDF, readPDFwithFile, score_qualifications
 
 app = FastAPI()
 
 origins = [
-    "*"  # หรือใส่เฉพาะโดเมน เช่น "http://localhost:3000", "https://996964f0140c.ngrok-free.app"
+    "*"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,           # อนุญาตโดเมนไหนเข้าถึง API
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],             # อนุญาต method GET, POST, PUT, DELETE
-    allow_headers=["*"],             # อนุญาต headers ทั้งหมด
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # GET API
@@ -34,8 +34,10 @@ async def AddCandidate(file: UploadFile = File(...)):
     if not readData['success']:
         return {"isSuccess":False}
     
-    res = extractData(readData['data']).strip("`").replace("json", "", 1).strip()
+    res = extractData_GPT(readData['data']).strip("`").replace("json", "", 1).strip()
     data = json.loads(res)
+    with open("log_resume.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
     addUser(data)
 
     return {"isSuccess":True,  "result": data}
@@ -51,7 +53,7 @@ async def add_job(job: JobRequest):
 job:{}
 description:{}
 '''.format(job.jobTitle,job.description)
-    res = extractJob(readData).strip("`").replace("json", "", 1).strip()
+    res = extractJob_GPT(readData).strip("`").replace("json", "", 1).strip()
     data = json.loads(res)
     addJob(data)
     return {"isSuccess":True,  "result": data}

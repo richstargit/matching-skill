@@ -246,6 +246,18 @@ Tech_skills = {
     "Help Desk Support": ["Technical Support"],
     "Ticketing Systems": ["Technical Support"],
     "Video Conferencing": [],
+
+    # Development Methodologies
+    "Agile": [],
+    "Scrum": ["Agile"],
+    "Kanban": ["Agile"],
+    "Extreme Programming (XP)": ["Agile"],
+    "Feature-Driven Development (FDD)": ["Agile"],
+    "Lean Software Development": ["Agile"],
+    "Waterfall": [],
+    "V-Model": [],
+    "Spiral Model": [],
+    "DevOps": ["Agile"],
 }
 
 Accounting_finance_skills = {
@@ -661,6 +673,163 @@ Legal_skills = {
     "Report Writing": ["Legal Drafting"],
 }
 
+Science_skills = {
+    # Core Science & Lab
+    "Laboratory Testing": [],
+    "Sample Preparation": ["Laboratory Testing"],
+    "Analytical Testing": ["Laboratory Testing"],
+    "Raw Material Testing": ["Laboratory Testing"],
+    "Plastics Chemical and Physical Property Testing": ["Laboratory Testing"],
+    "Color Testing and Measuring": ["Laboratory Testing", "Color Theory"],
+    "Sensory Assessment": ["Laboratory Testing"],
+    "Gravimetric": ["Laboratory Testing"],
+    "Wet Analysis": ["Laboratory Testing"],
+    "Adhesion": ["Laboratory Testing"],
+    "Synthesis": ["Laboratory Testing"],
+
+    # Lab Equipment / Techniques
+    "FTIR": ["Laboratory Testing"],
+    "GC": ["Laboratory Testing"],
+    "HPLC": ["Laboratory Testing"],
+    "ICP": ["Laboratory Testing"],
+    "XRF": ["Laboratory Testing"],
+    "SEM": ["Laboratory Testing"],
+    "BET": ["Laboratory Testing"],
+    "GPC": ["Laboratory Testing"],
+
+    # Standards & Compliance
+    "GMP": ["Quality Assurance"],
+    "HACCP": ["Quality Assurance"],
+    "ISO Standards": ["Quality Assurance"],
+    "ISO/IEC 17025": ["ISO Standards"],
+    "Quality Assurance": ["Quality Management Systems"],
+    "Quality Control": ["Quality Management Systems"],
+    "Quality Analysis": ["Quality Control"],
+    "QA": ["Quality Assurance"],
+    "QC": ["Quality Control"],
+    "Regulatory Compliance": ["Quality Assurance"],
+    "Safety Protocols": ["Quality Assurance"],
+    "Waste Management": ["Quality Assurance"],
+    "Six Sigma": ["Process Improvement"],
+    "Lean": ["Process Improvement"],
+
+    # Research & Development
+    "R&D": [],
+    "R&D Collaboration": ["R&D"],
+    "Product Trials": ["R&D"],
+    "Product Design": ["R&D"],
+    "Innovation": ["R&D"],
+
+    # Tools (non-tech general)
+    "ERP (SAP)": [],
+    "SAP B1": ["ERP (SAP)"],
+    "SAP-QM Module": ["ERP (SAP)"],
+    "Microsoft Office": [],
+    "MS Office": ["Microsoft Office"],
+    "Excel (Macro, Pivot, VLOOKUP)": ["Microsoft Office"],
+    "LaTeX": [],
+
+    # Business / Management
+    "Business Planning": [],
+    "Market Research": [],
+    "Marketing Strategy": ["Market Research"],
+    "Project Coordination": ["Management"],
+    "Management": [],
+    "Team Management": ["Management"],
+    "Reporting": ["Management"],
+    "Commercial Expertise": ["Business Planning"],
+
+    # Process & Improvement
+    "Process Improvement": [],
+    "Root Cause Analysis": ["Process Improvement"],
+    "Corrective Action Tracking": ["Process Improvement"],
+    "DFMEA": ["Process Improvement"],
+    "Continuous Improvement": ["Process Improvement"],
+}
+
+Hr_skills = {
+    # Core HR Functions
+    "Human Resource Management": [],
+    "HR Operations": ["Human Resource Management"],
+    "HR Policies": ["Human Resource Management"],
+    "HR Procedures": ["HR Policies"],
+    "HR Compliance": ["HR Policies"],
+    "Labor Law": ["HR Compliance"],
+    "Compensation & Benefits": ["Human Resource Management"],
+    "Payroll Management": ["Compensation & Benefits"],
+    "Payroll Processing": ["Payroll Management"],
+    "Social Security Fund Management": ["Payroll Management"],
+    "Provident Fund Management": ["Payroll Management"],
+    "Benefits Administration": ["Compensation & Benefits"],
+    "Talent Acquisition": ["Human Resource Management"],
+    "Recruitment": ["Talent Acquisition"],
+    "Screening": ["Recruitment"],
+    "Onboarding": ["Recruitment"],
+    "Interview Coordination": ["Recruitment"],
+    "Succession Planning": ["Human Resource Management"],
+    "Performance Management": ["Human Resource Management"],
+    "PMS": ["Performance Management"],
+    "Retention": ["Performance Management"],
+    "Employee Relations": ["Human Resource Management"],
+    "Employee Engagement": ["Employee Relations"],
+    "Grievance Handling": ["Employee Relations"],
+    "Disciplinary Actions": ["Employee Relations"],
+
+    # HR Development
+    "Learning & Development": ["Human Resource Management"],
+    "Training": ["Learning & Development"],
+    "Training Coordination": ["Training"],
+    "Training Management": ["Learning & Development"],
+    "Training Programs": ["Training"],
+    "Training Needs Identification": ["Training Management"],
+    "Career Development": ["Learning & Development"],
+    "Coaching": ["Learning & Development"],
+    "Executive Coaching": ["Coaching"],
+    "Employee Support": ["Employee Relations"],
+    "People Development": ["Learning & Development"],
+
+    # Strategic HR
+    "Strategic HR": ["Human Resource Management"],
+    "Workforce Planning": ["Strategic HR"],
+    "Manpower Strategies": ["Workforce Planning"],
+    "Mergers & Acquisitions": ["Strategic HR"],
+    "Transformation Projects": ["Strategic HR"],
+    "Organization Development": ["Strategic HR"],
+    "Organizational Design": ["Organization Development"],
+    "Talent Management": ["Strategic HR"],
+    "Talent Review": ["Talent Management"],
+    "Employer Branding": ["Strategic HR"],
+
+    # HR Analytics / Systems
+    "HR Analytics": ["Human Resource Management"],
+    "Data-Driven HR Decision-Making": ["HR Analytics"],
+    "HR Tech": ["HR Analytics"],
+    "HRIS Systems": ["HR Tech"],
+    "Applicant Tracking Systems": ["Recruitment"],
+    "Workday (WD) System": ["HRIS Systems"],
+    "Payroll Management Software": ["Payroll Management"],
+
+    # Legal & Compliance
+    "Regulation Revision": ["HR Compliance"],
+    "Visa & Work Permit Handling": ["HR Compliance"],
+    "Tax Management": ["HR Compliance"],
+    "Tax Reporting": ["Tax Management"],
+
+    # Collaboration & Coordination
+    "Internal Communication": ["Human Resource Management"],
+    "Relationship Management": ["Employee Relations"],
+    "Partnership Building": ["Relationship Management"],
+    "Team Collaboration": ["Human Resource Management"],
+
+    # General / Support Skills
+    "Administrative Tasks": ["Human Resource Management"],
+    "Documentation Management": ["Administrative Tasks"],
+    "Scheduling": ["Administrative Tasks"],
+    "Report Preparation": ["Administrative Tasks"],
+    "Reporting": ["Report Preparation"],
+    "Housekeeping Supervision": ["Administrative Tasks"],
+}
+
 Soft_skills = {
     # Communication / Thinking
     "Communication Skills": [],
@@ -795,6 +964,19 @@ Soft_skills = {
     "Organizational Skills": ["Organization"],
     "Office Management": ["Organization"],
     "Training": [],
+
+    "Analytical Skills": [],
+    "Analytical Thinking": ["Analytical Skills"],
+    "Attention to Detail": [],
+    "Observation": [],
+    "Communication Skills": [],
+    "Collaboration": ["Communication Skills"],
+    "Leadership": ["Communication Skills"],
+    "Time Management": [],
+    "Written Communication": ["Communication Skills"],
+    "Verbal Communication": ["Communication Skills"],
+    "Innovative Thinking": ["Analytical Skills"],
+    "Learning Ability": [],
 }
 
-DATA_SKILL = [Tech_skills,Accounting_finance_skills,Design_skills,Engineering_skills,Legal_skills]
+DATA_SKILL = [Tech_skills,Accounting_finance_skills,Design_skills,Engineering_skills,Legal_skills,Science_skills,Hr_skills]
