@@ -1,11 +1,21 @@
 PROMPT = {
     "extract_data":{
         "system":'''
-You are an AI that extracts information from a resume. 
+You are an AI that extracts information from a resume.
 
 Extract all available information according to the following interface and return the result in JSON format. If a field is missing or unavailable, fill string data with an empty string "" and number data with 0.
-"Eng" only
-interface:
+All data should be in English.
+
+Important:
+
+For the Education interface, if the degree contains the major (e.g., "Bachelor of Computer Science"), separate it properly:
+
+degree: "Bachelor"
+
+major: "Computer Science"
+
+interface definitions:
+
 interface Experience {
   id: int;
   role: string;
@@ -38,8 +48,7 @@ interface PersonalInfo {
   expectedSalary: number;
 }
 
-/*In Achievement extract projects or notable accomplishments from the resume*/
-interface Achievement{
+interface Achievement {
   id: int;
   title: string;
   description: string;
@@ -58,28 +67,8 @@ interface ResumeData {
   achievement: Achievement[];
 }
 
-Return "ResumeData" only valid JSON data. Do not include any extra text, explanations, or comments. The JSON must match the interface exactly.
-Example :
-{
-  "personalInfo": {
-  ...
-  },
-  "skills": [
-  ...
-  ],
-  "experiences": [
-    ...
-  ],
-  "education": [
-    ...
-  ],
-  "certificates": [
-    ...
-  ],
-  "achievement": [
-    ...
-  ]
-}
+Return only valid JSON of ResumeData matching the interface exactly.
+Do not include extra text, explanations, or comments.
 ''',
         "user":'''
 ''',
@@ -88,14 +77,33 @@ Example :
         "system":'''
 You are an AI that extracts structured information from job postings.
 Analyze the text of a job description and return the following information in JSON format (English only):
-title: the job title or position name.
-skills: a list of technical or soft skills required for the job. Include full names of frameworks, libraries, platforms, and tools (e.g., “Next.js”, “Express.js”, “React”, “AWS”).
-qualifications: a list of qualifications, requirements, or experiences mentioned in the posting.
+Extraction rules:
+- title: the job title or position name.
+- skills: a list of hard skills only (technical skills, tools, frameworks, libraries, platforms, programming languages).
+  - Always use names can identify (e.g., "Golang", "Express.js", "React").
+  - Do not use abbreviations alone (e.g., "Go" → "Golang", "Express" → "Express.js").
+- experiences: a list of required work experiences. Each item must have the format:
+  {
+    "job_name": "Position or role *only if 'or' crate new value",
+    "min_experience_years": 0,
+    "max_experience_years": 0,
+    "description": "Experience requirement text from the JD"
+  }
+  - If only a minimum is provided (e.g., "3+ years"), set "max_experience_years": null.
+  - If a range is given (e.g., "3–5 years"), fill both min and max.
+- educations: a list of required education qualifications and id number only. Each item must have the format:
+  {
+    "id": 1,
+    "education": ["Exact degree field(s). If the JD says 'or related field', replace with 3–5 most relevant academic fields instead of keeping the phrase"],
+    "minimum_level": ["Bachelor's degree" , "Master's degree" , "High School", "etc."]
+  }
+- responsibilities: a list of job duties and responsibilities as plain text.
+
 Requirements:
-Only include skills and qualifications explicitly mentioned in the job description.
-Use the exact wording for technical tools, frameworks, and programming languages.
-Do not include inferred or assumed skills.
-Return only valid JSON.
+- Only include information explicitly mentioned in the job description.
+- Do not infer or assume skills, experiences, or educations not written in the JD.
+- Use the exact wording from the JD where applicable, except for replacing "or related field" with 3–5 real academic fields.
+- Return only valid JSON.
 Example output:
 {
   "title": "Backend Developer",
@@ -104,14 +112,30 @@ Example output:
     "Express.js",
     "SQL",
     "Docker",
-    "Problem-solving"
+    "AWS"
   ],
-  "qualifications": [
-    "Bachelor's degree in Computer Science or related field",
-    "3+ years of backend development experience",
-    "Familiarity with cloud platforms such as AWS or GCP"
+  "experiences": [
+    {
+      "job_name": "Backend Developer",
+      "min_experience_years": 3,
+      "max_experience_years": null,
+      "description": "3+ years of backend development experience"
+    }
+  ],
+  "educations": [
+    {
+      "id": 1,
+      "education": ["Computer Science", "Software Engineering", "Information Technology", "Computer Engineering"],
+      "minimum_level": "Bachelor's degree"
+    }
+  ],
+  "responsibilities": [
+    "Develop and maintain backend services",
+    "Design and optimize database queries",
+    "Deploy applications on cloud infrastructure"
   ]
 }
+Now extract from this job description:
 ''',"user":'''
 '''
     },

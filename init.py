@@ -1,3 +1,4 @@
+import datetime
 import json
 import PyPDF2
 import requests
@@ -151,7 +152,7 @@ def add_job(tx, jobdata):
 
 def add_relation_usertoskill(tx, user,skill):
     tx.run("""
-        MATCH (c:Candidate {name: $user})
+        MATCH (c:Resume {name: $user})
         MATCH (s:Skill {name: $skill})
         MERGE (c)-[:HAVE_SKILL]->(s)
     """, user=user, skill=skill)
@@ -160,8 +161,23 @@ def add_relation_jobtoskill(tx, job,skill):
     tx.run("""
         MATCH (c:Job {name: $job})
         MATCH (s:Skill {name: $skill})
-        MERGE (c)-[:NEED_SKILL]->(s)
+        MERGE (c)-[:REQUIRED_SKILL]->(s)
     """, job=job, skill=skill)
+
+def add_req_usertoexp(tx, mongodb_id,exp,exp_year):
+    tx.run("""
+        MATCH (c:Resume {mongodb_id: $mongodb_id})
+        MATCH (s:Experience {name: $exp})
+        MERGE (c)-[r:Experience_in]->(s)
+        SET r.exp_year = $exp_year
+    """, mongodb_id=mongodb_id, exp=exp,exp_year=exp_year)
+
+def add_req_usertoedu(tx, mongodb_id,edu):
+    tx.run("""
+        MATCH (c:Resume {mongodb_id: $mongodb_id})
+        MATCH (s:Education {name: $edu})
+        MERGE (c)-[:Education_in]->(s)
+    """, mongodb_id=mongodb_id, edu=edu)
 
 def add_skill(tx, skill_name, embedding):
     tx.run("""
@@ -169,17 +185,29 @@ def add_skill(tx, skill_name, embedding):
         SET s.embedding = $embedding
     """, name=skill_name, embedding=embedding)
 
+def add_exp(tx, exp, embedding):
+    tx.run("""
+        MERGE (s:Experience {name: $exp})
+        SET s.embedding = $embedding
+    """, exp=exp, embedding=embedding)
+
+def add_edu(tx, edu, embedding):
+    tx.run("""
+        MERGE (s:Education {name: $edu})
+        SET s.embedding = $embedding
+    """, edu=edu, embedding=embedding)
+
 def addUser(userdata):
     driver = connectGraph()
 
     #insert to mongodb
-    result = resume_collection.insert_one(ResumeModel.parse_obj(userdata).dict())
+    resultdb = resume_collection.insert_one(ResumeModel.parse_obj(userdata).dict())
 
     #insert to graph
     with driver.session() as session:
 
         #create user node
-        session.write_transaction(add_user, userdata['personalInfo']['email'],str(result.inserted_id))
+        session.write_transaction(add_user, userdata['personalInfo']['email'],str(resultdb.inserted_id))
 
         #add skills
         for skill in userdata['skills']:
@@ -196,6 +224,61 @@ def addUser(userdata):
                 continue
 
             session.write_transaction(add_relation_usertoskill,userdata['personalInfo']['email'],result[0]["name"])
+
+        #add exp
+        for expdata in userdata['experiences']:
+            exp = expdata["role"].lower()
+            query_emb = model.encode([exp])[0].tolist()
+            result = session.run("""
+                CALL db.index.vector.queryNodes('experience_embedding_cos', $top_k, $embedding)
+                YIELD node, score
+                RETURN node.name AS name, score
+            """, top_k=1, embedding=query_emb)
+            result = list(result)
+
+            start_year = int(expdata['startDate']['year'])
+            if expdata.get('endDate') and expdata['endDate'].get('year'):
+                end_year = int(expdata['endDate']['year'])
+            else:
+                now = datetime.datetime.now()
+                end_year = now.year
+
+            if len(result)==0:
+                session.write_transaction(add_exp,exp,query_emb)
+                session.write_transaction(add_req_usertoexp,str(resultdb.inserted_id),exp,end_year-start_year)
+                continue
+
+            matching = result[0]["name"]
+            if float(result[0]["score"])<0.8:
+                session.write_transaction(add_exp,exp,query_emb)
+                matching = exp
+
+            session.write_transaction(add_req_usertoexp,str(resultdb.inserted_id),exp,end_year-start_year)
+        
+        #add edu
+        for edudata in userdata['education']:
+            edu = edudata["major"].lower()
+            query_emb = model.encode([edu])[0].tolist()
+            result = session.run("""
+                CALL db.index.vector.queryNodes('education_embedding_cos', $top_k, $embedding)
+                YIELD node, score
+                RETURN node.name AS name, score
+            """, top_k=1, embedding=query_emb)
+            result = list(result)
+
+            if len(result)==0:
+                session.write_transaction(add_edu,edu,query_emb)
+                session.write_transaction(add_req_usertoedu,str(resultdb.inserted_id),edu)
+                continue
+
+            matching = result[0]["name"]
+            if float(result[0]["score"])<0.8:
+                session.write_transaction(add_edu,edu,query_emb)
+                matching = edu
+
+            session.write_transaction(add_req_usertoedu,str(resultdb.inserted_id),matching)
+        
+
     driver.close()
 
 def addJob(jobdata):
@@ -213,12 +296,18 @@ def addJob(jobdata):
                 RETURN node.name AS name, score
             """, top_k=1, embedding=query_emb)
             result = list(result)
-            if float(result[0]["score"])<0.75:
+            if float(result[0]["score"])<0.8:
                 # session.write_transaction(add_skill,skill,query_emb)
                 # session.write_transaction(add_relation_jobtoskill,jobdata['title'],skill)
                 continue
-
             session.write_transaction(add_relation_jobtoskill,jobdata['title'],result[0]["name"])
+
+        #add exp
+
+        for exp in jobdata["experiences"]:
+            query_emb
+
+
     driver.close()
 
 def find_Job(name):
