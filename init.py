@@ -9,10 +9,11 @@ from dotenv import load_dotenv
 
 from connect.connectGraphDB import connectGraph
 from connect.connect_model import MODEL_RAG
+from db.model_job import JobModel
 from db.model_resume import ResumeModel
 from prompt.prompt import PROMPT
 
-from connect.connect_mongodb import resume_collection
+from connect.connect_mongodb import resume_collection,job_collection
 
 load_dotenv()
 
@@ -140,15 +141,16 @@ def add_user(tx, email,mongodb_id):
     resume_id = mongodb_id
     )
 
-def add_job(tx, jobdata):
+def add_job(tx, jobdata,mongodb_id):
     tx.run("""
         CREATE (j:Job {
             name: $name,
-            qualifications: $qualifications
+            mongodb_id: $mongodb_id
         })
     """, 
     name=jobdata['title'],
-    qualifications=jobdata['qualifications'])
+    mongodb_id=mongodb_id
+    )
 
 def add_relation_usertoskill(tx, user,skill):
     tx.run("""
@@ -159,7 +161,7 @@ def add_relation_usertoskill(tx, user,skill):
 
 def add_relation_jobtoskill(tx, job,skill):
     tx.run("""
-        MATCH (c:Job {name: $job})
+        MATCH (c:Job {mongodb_id: $job})
         MATCH (s:Skill {name: $skill})
         MERGE (c)-[:REQUIRED_SKILL]->(s)
     """, job=job, skill=skill)
@@ -172,12 +174,30 @@ def add_req_usertoexp(tx, mongodb_id,exp,exp_year):
         SET r.exp_year = $exp_year
     """, mongodb_id=mongodb_id, exp=exp,exp_year=exp_year)
 
+def add_req_jobtoexp(tx, mongodb_id,exp,min_year,max_year):
+    tx.run("""
+        MATCH (c:Job {mongodb_id: $mongodb_id})
+        MATCH (s:Experience {name: $exp})
+        MERGE (c)-[r:REQUIRED_Experience]->(s)
+        SET r.min_year = $min_year,
+           r.max_year = $max_year
+    """, mongodb_id=mongodb_id, exp=exp,min_year=min_year,max_year=max_year)
+
 def add_req_usertoedu(tx, mongodb_id,edu):
     tx.run("""
         MATCH (c:Resume {mongodb_id: $mongodb_id})
         MATCH (s:Education {name: $edu})
         MERGE (c)-[:Education_in]->(s)
     """, mongodb_id=mongodb_id, edu=edu)
+
+def add_req_jobtoedu(tx, mongodb_id,edu,edu_id,minimum_level):
+    tx.run("""
+        MATCH (c:Job {mongodb_id: $mongodb_id})
+        MATCH (s:Education {name: $edu})
+        MERGE (c)-[r:REQUIRED_Education]->(s)
+        SET r.edu_id = $edu_id,
+           r.minimum_level = $minimum_level
+    """, mongodb_id=mongodb_id, edu=edu,edu_id=edu_id,minimum_level=minimum_level)
 
 def add_skill(tx, skill_name, embedding):
     tx.run("""
@@ -249,11 +269,11 @@ def addUser(userdata):
                 continue
 
             matching = result[0]["name"]
-            if float(result[0]["score"])<0.8:
+            if float(result[0]["score"])<0.9:
                 session.write_transaction(add_exp,exp,query_emb)
                 matching = exp
 
-            session.write_transaction(add_req_usertoexp,str(resultdb.inserted_id),exp,end_year-start_year)
+            session.write_transaction(add_req_usertoexp,str(resultdb.inserted_id),matching,end_year-start_year)
         
         #add edu
         for edudata in userdata['education']:
@@ -272,7 +292,7 @@ def addUser(userdata):
                 continue
 
             matching = result[0]["name"]
-            if float(result[0]["score"])<0.8:
+            if float(result[0]["score"])<0.9:
                 session.write_transaction(add_edu,edu,query_emb)
                 matching = edu
 
@@ -283,9 +303,12 @@ def addUser(userdata):
 
 def addJob(jobdata):
     driver = connectGraph()
+
+    resultdb = job_collection.insert_one(JobModel.model_validate(jobdata).model_dump())
+
     with driver.session() as session:
         #create user node
-        session.write_transaction(add_job, jobdata)
+        session.execute_write(add_job, jobdata,str(resultdb.inserted_id))
 
         #add skills
         for skill in jobdata['skills']:
@@ -300,12 +323,63 @@ def addJob(jobdata):
                 # session.write_transaction(add_skill,skill,query_emb)
                 # session.write_transaction(add_relation_jobtoskill,jobdata['title'],skill)
                 continue
-            session.write_transaction(add_relation_jobtoskill,jobdata['title'],result[0]["name"])
+            session.execute_write(add_relation_jobtoskill,str(resultdb.inserted_id),result[0]["name"])
 
         #add exp
 
-        for exp in jobdata["experiences"]:
-            query_emb
+        for expdata in jobdata["experiences"]:
+            exp = expdata["job_name"].lower()
+            query_emb = model.encode([exp])[0].tolist()
+
+            result = session.run("""
+                CALL db.index.vector.queryNodes('experience_embedding_cos', $top_k, $embedding)
+                YIELD node, score
+                RETURN node.name AS name, score
+            """, top_k=1, embedding=query_emb)
+            result = list(result)
+
+            min_year = int(expdata["min_experience_years"])
+            if expdata["max_experience_years"]:
+                max_year = int(expdata["max_experience_years"])
+            else:
+                max_year=min_year
+            
+            if len(result)==0:
+                session.execute_write(add_exp,exp,query_emb)
+                session.execute_write(add_req_jobtoexp,str(resultdb.inserted_id),exp,min_year,max_year)
+                continue
+                
+            matching = result[0]["name"]
+            if float(result[0]["score"])<0.9:
+                session.execute_write(add_exp,exp,query_emb)
+                matching = exp
+
+            session.execute_write(add_req_jobtoexp,str(resultdb.inserted_id),matching,min_year,max_year)
+
+        #add edu
+        for edudata in jobdata['educations']:
+
+            for edu in edudata["education"]:
+                edu=edu.lower()
+                query_emb = model.encode([edu])[0].tolist()
+                result = session.run("""
+                    CALL db.index.vector.queryNodes('education_embedding_cos', $top_k, $embedding)
+                    YIELD node, score
+                    RETURN node.name AS name, score
+                """, top_k=1, embedding=query_emb)
+                result = list(result)
+
+                if len(result)==0:
+                    session.execute_write(add_edu,edu,query_emb)
+                    session.execute_write(add_req_jobtoedu,str(resultdb.inserted_id),edu,edudata["id"],edudata["minimum_level"])
+                    continue
+
+                matching = result[0]["name"]
+                if float(result[0]["score"])<0.9:
+                    session.execute_write(add_edu,edu,query_emb)
+                    matching = edu
+
+                session.execute_write(add_req_jobtoedu,str(resultdb.inserted_id),matching,edudata["id"],edudata["minimum_level"])
 
 
     driver.close()

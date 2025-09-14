@@ -55,7 +55,7 @@ description:{}
 '''.format(job.jobTitle,job.description)
     res = extractJob_GPT(readData).strip("`").replace("json", "", 1).strip()
     data = json.loads(res)
-    #addJob(data)
+    addJob(data)
     return {"isSuccess":True,  "result": data}
 
 

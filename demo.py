@@ -1,6 +1,6 @@
 
-from connectGraphDB import connectGraph
-from connect_model import MODEL_RAG
+from connect.connectGraphDB import connectGraph
+from connect.connect_model import MODEL_RAG
 
 
 model = MODEL_RAG

@@ -10,6 +10,7 @@ tech_skills_relate = {
     
     # Backend / Web Frameworks
     "Express.js": ["Node.js"], 
+    "REST API":["REST"],
     
     # Databases
     "MySQL": ["SQL"],

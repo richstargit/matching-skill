@@ -32,6 +32,7 @@ tech_skills_child = {
     "Flask": ["Python"],
     "Django": ["Python"],
     "REST API": ["Backend Development"],
+    "REST":[],
 
     # Databases
     "MySQL": [],
@@ -187,7 +188,7 @@ tech_skills_child = {
 
     # Mobile / Cross-platform
     "iOS Development": ["Swift"],
-    "Flutter": ["Dart"],
+    "Flutter": [],
 
     # Cloud / Infra
     "Snowflake": ["Big Data Technologies"],

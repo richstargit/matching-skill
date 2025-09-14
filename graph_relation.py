@@ -89,13 +89,13 @@ def buildgraph():
         # เพิ่ม relations skill->skill
         for skill, related_skills in tech_skills_relate.items():
             for related in related_skills:
-                embedding = model.encode([skill.lower()])[0].tolist()
+                embedding = model.encode([related.lower()])[0].tolist()
                 session.write_transaction(add_skill, related.lower(), embedding)
                 session.write_transaction(add_relate_skilltoskill, skill.lower(), related.lower())
 
         for skill, core_skills in tech_skills_child.items():
             for core in core_skills:
-                embedding = model.encode([skill.lower()])[0].tolist()
+                embedding = model.encode([core.lower()])[0].tolist()
                 session.write_transaction(add_skill, core.lower(), embedding)
                 session.write_transaction(add_child_skilltoskill, skill.lower(), core.lower())
                 

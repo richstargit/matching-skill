@@ -9,3 +9,4 @@ MONGODB = os.getenv("MONGODB")
 client = MongoClient(MONGODB)
 db = client['jobmatchDB']
 resume_collection = db['resumes']
+job_collection = db['jobs']

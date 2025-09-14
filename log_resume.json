@@ -49,7 +49,7 @@
                 "year": "2022"
             },
             "endDate": null,
-            "description": "Designed and developed scalable REST APIs using Node.js and Express. Built modern frontend interfaces with Next.js and TailwindCSS. Led migration from monolithic architecture to microservices. Implemented CI/CD pipelines on GitHub Actions and AWS.",
+            "description": "- Designed and developed scalable REST APIs using Node.js and Express. - Built modern frontend interfaces with Next.js and TailwindCSS. - Led migration from monolithic architecture to microservices. - Implemented CI/CD pipelines on GitHub Actions and AWS.",
             "isCurrentRole": true
         },
         {
@@ -64,14 +64,14 @@
                 "month": "",
                 "year": "2022"
             },
-            "description": "Developed responsive UI components with React and Vue.js. Optimized page performance and reduced load time by 40%. Collaborated with UX/UI designers to implement new features. Integrated frontend with backend APIs.",
+            "description": "- Developed responsive UI components with React and Vue.js. - Optimized page performance and reduced load time by 40%. - Collaborated with UX/UI designers to implement new features. - Integrated frontend with backend APIs.",
             "isCurrentRole": false
         }
     ],
     "education": [
         {
             "id": 1,
-            "degree": "Bachelor",
+            "degree": "B.Sc.",
             "institution": "Chulalongkorn University",
             "faculty": "",
             "major": "Computer Science",
