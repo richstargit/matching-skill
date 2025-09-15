@@ -82,7 +82,7 @@ Extraction rules:
 - skills: a list of hard skills only (technical skills, tools, frameworks, libraries, platforms, programming languages).
   - Always use names can identify (e.g., "Golang", "Express.js", "React").
   - Do not use abbreviations alone (e.g., "Go" → "Golang", "Express" → "Express.js").
-- experiences: a list of required work experiences. Each item must have the format:
+- experiences: a list of required work experiences (position role) and find experience if not find give 0. Each item must have the format:
   {
     "job_name": "Position or role *only if 'or' crate new value",
     "min_experience_years": 0,

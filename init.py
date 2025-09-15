@@ -434,6 +434,31 @@ def find_Job(name):
     driver.close()
     return jobs
 
+def find_Job_by_email(email):
+
+    result : ResumeModel = resume_collection.find_one({"personalInfo.email":email})
+    mongodb_id = str(result["_id"])
+    driver = connectGraph()
+    with driver.session() as session:
+        result = session.run("""
+                MATCH (:Resume {mongodb_id:"$mongodb_id"})-[:HAVE_SKILL*]->(s1:Skill)
+                OPTIONAL MATCH (s1)-[:CHILD*]->(s3:Skill)
+                OPTIONAL MATCH (s1)-[:RELATE*]->(s2:Skill)
+                OPTIONAL MATCH (s2)-[:CHILD*]->(s4:Skill)
+                WITH collect({parent:s1.name, child:s3.name}) +
+                    collect({parent:s2.name, child:s4.name}) AS pairs,collect(s1.name) + collect(s2.name) AS allSkills
+                UNWIND pairs AS pc
+                WITH DISTINCT pc.parent AS parent, pc.child AS child, allSkills
+                WHERE parent IS NOT NULL AND child IS NOT NULL
+                RETURN apoc.coll.toSet(allSkills) AS skills,collect(child) AS childSkills;
+
+            """, mongodb_id=mongodb_id)
+        for record in result:
+            print(record) 
+        
+    driver.close()
+    return result
+
 def score_qualifications(name,jobdata):
     driver = connectGraph()
     with driver.session() as session:

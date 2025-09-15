@@ -1,77 +1,72 @@
 {
     "personalInfo": {
-        "fullName": "John Doe",
-        "phone": "+66-89-123-4567",
-        "email": "johndoe@example.com",
+        "fullName": "Alex Johnson",
+        "phone": "+66 91-234-5678",
+        "email": "alex.johnson@email.com",
         "address": "Bangkok, Thailand",
         "birthDate": null,
         "currentSalary": 0,
         "expectedSalary": 0
     },
     "skills": [
-        "JavaScript",
-        "TypeScript",
         "Python",
         "SQL",
-        "HTML5",
-        "CSS3",
-        "React",
-        "Next.js",
-        "Vue.js",
-        "TailwindCSS",
-        "Bootstrap",
-        "Node.js",
-        "Express",
-        "Django",
-        "Spring Boot",
-        "PostgreSQL",
-        "MySQL",
-        "MongoDB",
-        "Redis",
+        "R",
+        "JavaScript",
+        "PyTorch",
+        "TensorFlow",
+        "Keras",
+        "scikit-learn",
+        "Pandas",
+        "NumPy",
+        "OpenCV",
+        "NLTK",
+        "SpaCy",
+        "Flask",
+        "FastAPI",
         "Docker",
-        "Kubernetes",
+        "AWS (S3, Lambda)",
+        "GCP",
         "Git",
-        "CI/CD",
-        "AWS",
-        "Azure",
-        "Figma",
-        "Jira",
-        "Postman",
-        "VS Code"
+        "Jupyter",
+        "MLflow",
+        "Exploratory Data Analysis (EDA)",
+        "Data Visualization",
+        "Model Optimization"
     ],
     "experiences": [
         {
             "id": 1,
-            "role": "Senior Fullstack Developer",
-            "company": "Tech Solutions Co., Ltd.",
+            "role": "AI / ML Engineer",
+            "company": "TechStartup Ltd.",
             "startDate": {
-                "month": "",
-                "year": "2022"
+                "month": "Jan",
+                "year": "2023"
             },
             "endDate": null,
-            "description": "- Designed and developed scalable REST APIs using Node.js and Express. - Built modern frontend interfaces with Next.js and TailwindCSS. - Led migration from monolithic architecture to microservices. - Implemented CI/CD pipelines on GitHub Actions and AWS.",
+            "description": "Built predictive models for customer churn and sales forecasting using Python and scikit-learn. Developed NLP pipelines for text classification and sentiment analysis. Optimized ML model inference speed and reduced memory usage by 30%. Collaborated with product and backend teams to integrate AI features into web applications.",
             "isCurrentRole": true
         },
         {
             "id": 2,
-            "role": "Frontend Developer",
-            "company": "StartupX",
+            "role": "ML Intern",
+            "company": "DataSolutions Co.",
             "startDate": {
-                "month": "",
-                "year": "2019"
-            },
-            "endDate": {
-                "month": "",
+                "month": "Jun",
                 "year": "2022"
             },
-            "description": "- Developed responsive UI components with React and Vue.js. - Optimized page performance and reduced load time by 40%. - Collaborated with UX/UI designers to implement new features. - Integrated frontend with backend APIs.",
+            "endDate": {
+                "month": "Dec",
+                "year": "2022"
+            },
+            "description": "Assisted in building computer vision models for object detection using PyTorch. Performed data cleaning, augmentation, and feature engineering. Deployed prototype models using Flask APIs for internal testing.",
             "isCurrentRole": false
         }
     ],
     "education": [
         {
             "id": 1,
-            "degree": "B.Sc.",
+            "degree": "Bachelor",
             "institution": "Chulalongkorn University",
             "faculty": "",
             "major": "Computer Science",
@@ -81,7 +76,7 @@
             },
             "endDate": {
                 "month": "",
-                "year": "2019"
+                "year": "2022"
             },
             "gpa": "",
             "isCurrentlyStudying": false
@@ -90,23 +85,22 @@
     "certificates": [
         {
             "id": 1,
-            "name": "AWS Certified Solutions Architect – Associate (2023)"
+            "name": "DeepLearning.AI TensorFlow Developer"
         },
         {
             "id": 2,
-            "name": "Google Professional Cloud Developer (2022)"
+            "name": "AWS Machine Learning Specialty (In Progress)"
         }
     ],
     "achievement": [
         {
             "id": 1,
-            "title": "E-Commerce Platform",
-            "description": "Built a full-featured e-commerce web application with shopping cart, payment gateway, and admin dashboard.",
+            "title": "Customer Churn Prediction",
+            "description": "ML model achieving 85% accuracy, deployed via FastAPI.",
             "technologies": [
-                "Next.js",
-                "Node.js",
-                "PostgreSQL",
-                "Stripe API"
+                "Python",
+                "scikit-learn",
+                "FastAPI"
             ],
             "link": "",
             "startDate": {
@@ -117,13 +111,28 @@
         },
         {
             "id": 2,
-            "title": "Realtime Chat App",
-            "description": "Developed a real-time chat application with WebSocket and authentication.",
+            "title": "Sentiment Analysis Tool",
+            "description": "Analyzed product reviews with NLP pipeline using Python & SpaCy.",
             "technologies": [
-                "React",
-                "Express",
-                "MongoDB",
-                "Socket.IO"
+                "Python",
+                "SpaCy",
+                "NLTK"
+            ],
+            "link": "",
+            "startDate": {
+                "month": "",
+                "year": ""
+            },
+            "endDate": null
+        },
+        {
+            "id": 3,
+            "title": "Object Detection System",
+            "description": "YOLOv8-based model for real-time object detection demo.",
+            "technologies": [
+                "YOLOv8",
+                "PyTorch",
+                "OpenCV"
             ],
             "link": "",
             "startDate": {

@@ -3,7 +3,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from connect.connectGraphDB import connectGraph
-from init import addJob, addUser, extractData, extractData_GPT, extractJob, extractJob_GPT, find_Job, readPDF, readPDFwithFile, score_qualifications
+from init import addJob, addUser, extractData, extractData_GPT, extractJob, extractJob_GPT, find_Job, find_Job_by_email, readPDF, readPDFwithFile, score_qualifications
 
 app = FastAPI()
 
@@ -64,41 +64,47 @@ class Candidate(BaseModel):
     
 @app.post("/findjob")
 async def addjob(candidate: Candidate):
-    res = find_Job(candidate.email)
-    if len(res)<0:
-        return
-    score = []
-    score_q = json.loads(score_qualifications(candidate.email,res))
-    score_qmap = {item['id']: item for item in score_q}
-    for j in res:
-        score_skill = len(j['match'])/(len(j['match'])+len(j['miss']))*100
+    res = find_Job_by_email(candidate.email)
+
+    return {"isSuccess":True,  "result": "res"}
+
+# @app.post("/findjob")
+# async def addjob(candidate: Candidate):
+#     res = find_Job(candidate.email)
+#     if len(res)<0:
+#         return
+#     score = []
+#     score_q = json.loads(score_qualifications(candidate.email,res))
+#     score_qmap = {item['id']: item for item in score_q}
+#     for j in res:
+#         score_skill = len(j['match'])/(len(j['match'])+len(j['miss']))*100
     
-        j['score_skill']=score_skill
-        j['score_exp']=score_qmap[j['id']]['score_exp']
-        j['score_edu']=score_qmap[j['id']]['score_edu']
-        j['score_ach']=score_qmap[j['id']]['score_ach']
-        j['exp_reasons'] = score_qmap[j['id']].get('exp_reasons', [])
-        j['edu_reasons'] = score_qmap[j['id']].get('edu_reasons', [])
-        j['ach_reasons'] = score_qmap[j['id']].get('ach_reasons', [])
+#         j['score_skill']=score_skill
+#         j['score_exp']=score_qmap[j['id']]['score_exp']
+#         j['score_edu']=score_qmap[j['id']]['score_edu']
+#         j['score_ach']=score_qmap[j['id']]['score_ach']
+#         j['exp_reasons'] = score_qmap[j['id']].get('exp_reasons', [])
+#         j['edu_reasons'] = score_qmap[j['id']].get('edu_reasons', [])
+#         j['ach_reasons'] = score_qmap[j['id']].get('ach_reasons', [])
 
-        score_min = min(j['score_skill'], j['score_exp'], j['score_edu'])
+#         score_min = min(j['score_skill'], j['score_exp'], j['score_edu'])
 
-        if j['score_skill']== score_min:
-            j['score_skill']+=j['score_ach']*0.1
-            if j['score_skill']>100:
-                j['score_skill']=100
-        elif j['score_exp']== score_min:
-            j['score_exp']+=j['score_ach']*0.1
-            if j['score_exp']>100:
-                j['score_exp']=100
-        else :
-            j['score_edu']+=j['score_ach']*0.1
-            if j['score_edu']>100:
-                j['score_edu']=100
+#         if j['score_skill']== score_min:
+#             j['score_skill']+=j['score_ach']*0.1
+#             if j['score_skill']>100:
+#                 j['score_skill']=100
+#         elif j['score_exp']== score_min:
+#             j['score_exp']+=j['score_ach']*0.1
+#             if j['score_exp']>100:
+#                 j['score_exp']=100
+#         else :
+#             j['score_edu']+=j['score_ach']*0.1
+#             if j['score_edu']>100:
+#                 j['score_edu']=100
 
-        j['score'] = j['score_skill']*0.7+j['score_exp']*0.2+j['score_edu']*0.1
-        score.append(j)
-    return {"isSuccess":True,  "result": score}
+#         j['score'] = j['score_skill']*0.7+j['score_exp']*0.2+j['score_edu']*0.1
+#         score.append(j)
+#     return {"isSuccess":True,  "result": score}
 
 
 @app.get("/jobs")
