@@ -3,7 +3,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from connect.connectGraphDB import connectGraph
-from init import addJob, addUser, extractData, extractData_GPT, extractJob, extractJob_GPT, find_Job, find_Job_by_email, readPDF, readPDFwithFile, score_qualifications
+from init import addJob, addUser, cal_score, extractData_GPT, extractJob_GPT, readPDFwithFile, score_job
 
 app = FastAPI()
 
@@ -64,9 +64,14 @@ class Candidate(BaseModel):
     
 @app.post("/findjob")
 async def addjob(candidate: Candidate):
-    res = find_Job_by_email(candidate.email)
-
-    return {"isSuccess":True,  "result": "res"}
+    job_dict = score_job(candidate.email)
+    for key,job in job_dict.items():
+        job_dict[key]["score"] = round(cal_score(job),2)
+    
+    job_list = []
+    for key, job in job_dict.items():
+        job_list.append({"id": key, **job})
+    return {"isSuccess":True,  "result": job_list}
 
 # @app.post("/findjob")
 # async def addjob(candidate: Candidate):

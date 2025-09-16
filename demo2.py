@@ -86,23 +86,35 @@ def score_edu_cal(j,resume_exp_edu):
 
     resume_edu_set = set(resume_exp_edu.get("edu", []))
 
-    matched_count = sum(1 for v in edu_dict.values() if v["edu"] & resume_edu_set)
+    matched = []
+    not_matched = []
 
-    return matched_count / len(edu_dict) if edu_dict else 0.0
+    for _, v in edu_dict.items():
+        if v["edu"] & resume_edu_set:
+            matched.extend(v["edu"] & resume_edu_set)  # เก็บเฉพาะที่ match
+        else:
+            not_matched.extend(v["edu"])
+
+    return len(matched) / len(edu_dict) if edu_dict else 0.0,matched,not_matched
 
 def score_exp_cal(j,exp_year):
     sum_exp = 0
+
+    matched = []
+    not_matched = []
+
     for exp in j["experiences"]:
         if exp["exp_name"] not in exp_year:
+            not_matched.append(exp["exp_name"])
+
             continue
         if exp_year[exp["exp_name"]]>=exp["min_year"]:
+            matched.append(exp["exp_name"])
             sum_exp+=0.6
         if exp_year[exp["exp_name"]]>=exp["max_year"]:
             sum_exp+=0.4
     
-    return sum_exp/len(j["experiences"])
-
-
+    return sum_exp/len(j["experiences"]),matched,not_matched
 
 def score_job(email):
     result : ResumeModel = resume_collection.find_one({"personalInfo.email":email})
@@ -129,24 +141,90 @@ def score_job(email):
 
     jobs = find_job_by_mongodb_id(mongodb_id)
     
+    job_score_dict = {}
+
     for j in jobs:
-        print(j["name"])
         match_all = len(j["skills"])
+        ismatch = []
+        isChild = []
+        notmatch = []
         sum_skill = 0
+        if len(j["skills"])==0:
+            sum_skill=-1
         for s in j["skills"]:
             if s not in match_skills:
+                notmatch.append(s)
                 continue
             sum_skill+=match_skills[s]
+            if match_skills[s]==1:
+                ismatch.append(s)
+            else:
+                isChild.append(s)
         
-        print("score skill :",(sum_skill/match_all)*100)
+        score_skill = (sum_skill/match_all)
+
+        score_edu = -1
+        matchedu=[]
+        missedu=[]
+
         if j["educations"][0]["edu_name"]:
-            score = score_edu_cal(j,resume_exp_edu)
+            score_edu,matchedu,missedu = score_edu_cal(j,resume_exp_edu)
 
-            print("score edu :",score*100)
-        
+        score_exp = -1
+        matchexp=[]
+        missexp=[]
         if j["experiences"][0]["exp_name"]:
-            score = score_exp_cal(j,exp_year)
-            print("score exp :",score*100)
-        print("-----------------------------------")
+            score_exp,matchexp,missexp = score_exp_cal(j,exp_year)
 
-score_job("johndoe@example.com")
+        job_score_dict[j["mongodb_id"]] = {
+            "name":j["name"],
+            "skill" :{
+                "score":score_skill,
+                "match":ismatch,
+                "maybehave":isChild,
+                "miss":notmatch
+            },
+            "experience":{
+                "score":score_exp,
+                "match":matchexp,
+                "miss":missexp
+            },
+            "education":{
+                "score":score_edu,
+                "match":matchedu,
+                "miss":missedu
+            }
+        }
+    return job_score_dict
+
+def cal_score(job_score):
+    w_skill = 0.7
+    w_exp = 0.2
+    w_edu = 0.1
+
+    w_list = [w_skill,w_exp,w_edu]
+    cal_key = ["skill","experience","education"]
+
+    for idx,k in enumerate(cal_key):
+        if job_score[k]["score"]==-1:
+            temp = w_list[idx]
+            w_list[idx]=0
+            for i in range(len(w_list)):
+                if w_list[i]!=0:
+                    w_list[i]+=temp
+                    break
+
+    score = w_list[0]*job_score["skill"]["score"]+w_list[1]*job_score["experience"]["score"]+w_list[2]*job_score["experience"]["score"]
+
+    return score
+
+job_dict = score_job("johndoe@example.com")
+
+for key,job in job_dict.items():
+    
+    print(job["name"])
+    print("skill-score",job["skill"]["score"])
+    print("experience-score",job["experience"]["score"])
+    print("education-score",job["education"]["score"])
+    print("sum score",round(cal_score(job),2))
+    print("--------------------------")
