@@ -116,21 +116,27 @@ async def addjob(candidate: Candidate):
 def get_jobs():
     driver = connectGraph()
     query = """
-    MATCH (n:Job)-[:NEED_SKILL]->(s:Skill)
-WITH n, collect(s.name) AS skills
-RETURN {
-    name: n.name,
-    qualifications: n.qualifications,
-    skills: skills
-} AS job
-
+    MATCH (j:Job)-[:REQUIRED_SKILL]->(skill2:Skill)
+    OPTIONAL MATCH (j)-[w:REQUIRED_Education]->(ej:Education)
+    OPTIONAL MATCH (j)-[w2:REQUIRED_Experience]->(exp:Experience)
+    RETURN j.name as name,
+           j.mongodb_id as mongodb_id,
+           collect(DISTINCT skill2.name) AS skills,
+           collect(DISTINCT {exp_name:exp.name, max_year:w2.max_year, min_year:w2.min_year}) AS experiences,
+           collect(DISTINCT {edu_id: w.edu_id, edu_name: ej.name, minimum_level: w.minimum_level}) AS educations;
     """
 
     jobs = []
     with driver.session() as session:
         result = session.run(query)
         for record in result:
-            jobs.append(record["job"])
+            jobs.append({
+                "name": record["name"],
+                "mongodb_id": record["mongodb_id"],
+                "skills": record["skills"],
+                "experiences": record["experiences"],
+                "educations": record["educations"]
+            })
 
     driver.close()
 

@@ -1,9 +1,9 @@
 {
     "personalInfo": {
-        "fullName": "Alex Johnson",
-        "phone": "+66 91-234-5678",
-        "email": "alex.johnson@email.com",
-        "address": "Bangkok, Thailand",
+        "fullName": "ธนกร สายประดิษฐ์",
+        "phone": "+66 912345678",
+        "email": "thanakorn.saipradit@example.com",
+        "address": "",
         "birthDate": null,
         "currentSalary": 0,
         "expectedSalary": 0
@@ -11,46 +11,26 @@
     "skills": [
         "Python",
         "SQL",
-        "R",
-        "JavaScript",
-        "PyTorch",
         "TensorFlow",
-        "Keras",
+        "PyTorch",
         "scikit-learn",
         "Pandas",
         "NumPy",
-        "OpenCV",
-        "NLTK",
-        "SpaCy",
-        "Flask",
-        "FastAPI",
+        "AWS",
         "Docker",
-        "AWS (S3, Lambda)",
-        "GCP",
-        "Git",
-        "Jupyter",
-        "MLflow",
-        "Exploratory Data Analysis (EDA)",
-        "Data Visualization",
-        "Model Optimization"
+        "Kubernetes",
+        "Algorithms & Data Structures",
+        "NLP",
+        "Computer Vision",
+        "Problem-solving",
+        "teamwork",
+        "communication"
     ],
     "experiences": [
         {
             "id": 1,
-            "role": "AI / ML Engineer",
-            "company": "TechStartup Ltd.",
-            "startDate": {
-                "month": "Jan",
-                "year": "2023"
-            },
-            "endDate": null,
-            "description": "Built predictive models for customer churn and sales forecasting using Python and scikit-learn. Developed NLP pipelines for text classification and sentiment analysis. Optimized ML model inference speed and reduced memory usage by 30%. Collaborated with product and backend teams to integrate AI features into web applications.",
-            "isCurrentRole": true
-        },
-        {
-            "id": 2,
-            "role": "ML Intern",
-            "company": "DataSolutions Co.",
+            "role": "Machine Learning Engineer Intern",
+            "company": "AI Labs Co., Bangkok",
             "startDate": {
                 "month": "Jun",
                 "year": "2022"
@@ -59,14 +39,14 @@
                 "month": "Dec",
                 "year": "2022"
             },
-            "description": "Assisted in building computer vision models for object detection using PyTorch. Performed data cleaning, augmentation, and feature engineering. Deployed prototype models using Flask APIs for internal testing.",
+            "description": "Developed NLP models for text classification with 85% accuracy. Implemented computer vision pipelines for image recognition tasks. Collaborated with software engineers to integrate ML models into web applications.",
             "isCurrentRole": false
         }
     ],
     "education": [
         {
             "id": 1,
-            "degree": "Bachelor",
+            "degree": "Master",
             "institution": "Chulalongkorn University",
             "faculty": "",
             "major": "Computer Science",
@@ -80,27 +60,43 @@
             },
             "gpa": "",
             "isCurrentlyStudying": false
+        },
+        {
+            "id": 2,
+            "degree": "Bachelor",
+            "institution": "Kasetsart University",
+            "faculty": "",
+            "major": "Data Science",
+            "startDate": {
+                "month": "",
+                "year": ""
+            },
+            "endDate": {
+                "month": "",
+                "year": "2020"
+            },
+            "gpa": "",
+            "isCurrentlyStudying": false
         }
     ],
     "certificates": [
         {
             "id": 1,
-            "name": "DeepLearning.AI TensorFlow Developer"
+            "name": "TensorFlow Developer Certificate"
         },
         {
             "id": 2,
-            "name": "AWS Machine Learning Specialty (In Progress)"
+            "name": "AWS Machine Learning Specialty"
         }
     ],
     "achievement": [
         {
             "id": 1,
-            "title": "Customer Churn Prediction",
-            "description": "ML model achieving 85% accuracy, deployed via FastAPI.",
+            "title": "Movie Recommendation System",
+            "description": "Built collaborative filtering model using Python and scikit-learn.",
             "technologies": [
                 "Python",
-                "scikit-learn",
-                "FastAPI"
+                "scikit-learn"
             ],
             "link": "",
             "startDate": {
@@ -111,12 +107,11 @@
         },
         {
             "id": 2,
-            "title": "Sentiment Analysis Tool",
-            "description": "Analyzed product reviews with NLP pipeline using Python & SpaCy.",
+            "title": "Handwritten Digit Recognition",
+            "description": "CNN model implemented in TensorFlow achieving 98% accuracy.",
             "technologies": [
-                "Python",
-                "SpaCy",
-                "NLTK"
+                "TensorFlow",
+                "CNN"
             ],
             "link": "",
             "startDate": {
@@ -127,12 +122,11 @@
         },
         {
             "id": 3,
-            "title": "Object Detection System",
-            "description": "YOLOv8-based model for real-time object detection demo.",
+            "title": "Sentiment Analysis on Thai Social Media",
+            "description": "Preprocessed large-scale text datasets and trained ML models.",
             "technologies": [
-                "YOLOv8",
-                "PyTorch",
-                "OpenCV"
+                "Python",
+                "NLP"
             ],
             "link": "",
             "startDate": {

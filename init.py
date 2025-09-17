@@ -519,16 +519,18 @@ def score_edu_cal(j,resume_exp_edu):
 
     resume_edu_set = set(resume_exp_edu.get("edu", []))
 
+    sum = 0
     matched = []
     not_matched = []
 
     for _, v in edu_dict.items():
         if v["edu"] & resume_edu_set:
             matched.extend(v["edu"] & resume_edu_set)  # เก็บเฉพาะที่ match
+            sum+=1
         else:
             not_matched.extend(v["edu"])
 
-    return len(matched) / len(edu_dict) if edu_dict else 0.0,matched,not_matched
+    return sum / len(edu_dict) if edu_dict else 0.0,matched,not_matched
 
 def score_exp_cal(j,exp_year):
     sum_exp = 0
@@ -647,7 +649,7 @@ def cal_score(job_score):
                     w_list[i]+=temp
                     break
 
-    score = w_list[0]*job_score["skill"]["score"]+w_list[1]*job_score["experience"]["score"]+w_list[2]*job_score["experience"]["score"]
+    score = w_list[0]*job_score["skill"]["score"]+w_list[1]*job_score["experience"]["score"]+w_list[2]*job_score["education"]["score"]
 
     return score
 
