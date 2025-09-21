@@ -75,6 +75,27 @@ def create_vector_index_edu():
         """)
     print("✅ Vector Index Created")
 
+def create_keysearch_skill():
+    with driver.session() as session:
+        session.run("""
+        CREATE FULLTEXT INDEX skillIndex FOR (s:Skill) ON EACH [s.name];
+        """)
+    print("✅ text skill Created")
+
+def create_keysearch_exp():
+    with driver.session() as session:
+        session.run("""
+        CREATE FULLTEXT INDEX expIndex FOR (s:Experience) ON EACH [s.name];
+        """)
+    print("✅ text exp Created")
+
+def create_keysearch_edu():
+    with driver.session() as session:
+        session.run("""
+        CREATE FULLTEXT INDEX eduIndex FOR (s:Education) ON EACH [s.name];
+        """)
+    print("✅ text edu Created")
+
 def buildgraph():
     with driver.session() as session:
         # เพิ่ม skill nodes

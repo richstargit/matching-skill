@@ -1,0 +1,9 @@
+bootstrap
+redis
+git
+figma
+jira
+postman
+html5
+access
+.net core

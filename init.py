@@ -233,30 +233,21 @@ def addUser(userdata):
 
         #add skills
         for skill in userdata['skills']:
-            query_emb = model.encode([skill.lower()])[0].tolist()
-            result = session.run("""
-                CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
-                YIELD node, score
-                RETURN node.name AS name, score
-            """, top_k=1, embedding=query_emb)
-            result = list(result)
-            if float(result[0]["score"])<0.8:
-                # session.write_transaction(add_skill,skill,query_emb)
-                # session.write_transaction(add_relation_usertoskill,userdata['personalInfo']['email'],skill)
-                continue
-
-            session.write_transaction(add_relation_usertoskill,userdata['personalInfo']['email'],result[0]["name"])
+            skill = skill.lower()
+            s = search_skills(skill=skill,session=session)
+            if not s:
+                query_emb = model.encode([skill])[0].tolist()
+                session.execute_write(add_skill,skill,query_emb)
+                s = skill
+                with open("missing_skills.txt", "a", encoding="utf-8") as f:
+                    f.write(skill + "\n")
+            
+            session.write_transaction(add_relation_usertoskill,userdata['personalInfo']['email'],s)
 
         #add exp
         for expdata in userdata['experiences']:
             exp = expdata["role"].lower()
-            query_emb = model.encode([exp])[0].tolist()
-            result = session.run("""
-                CALL db.index.vector.queryNodes('experience_embedding_cos', $top_k, $embedding)
-                YIELD node, score
-                RETURN node.name AS name, score
-            """, top_k=1, embedding=query_emb)
-            result = list(result)
+            
 
             start_year = int(expdata['startDate']['year'])
             if expdata.get('endDate') and expdata['endDate'].get('year'):
@@ -264,41 +255,27 @@ def addUser(userdata):
             else:
                 now = datetime.datetime.now()
                 end_year = now.year
+            
+            experience = search_exp(exp,session)
+            if not experience:
+                query_emb = model.encode([exp])[0].tolist()
+                session.execute_write(add_exp,exp,query_emb)
+                experience = exp
 
-            if len(result)==0:
-                session.write_transaction(add_exp,exp,query_emb)
-                session.write_transaction(add_req_usertoexp,str(resultdb.inserted_id),exp,end_year-start_year)
-                continue
-
-            matching = result[0]["name"]
-            if float(result[0]["score"])<0.9:
-                session.write_transaction(add_exp,exp,query_emb)
-                matching = exp
-
-            session.write_transaction(add_req_usertoexp,str(resultdb.inserted_id),matching,end_year-start_year)
+            session.write_transaction(add_req_usertoexp,str(resultdb.inserted_id),experience,end_year-start_year)
         
         #add edu
         for edudata in userdata['education']:
             edu = edudata["major"].lower()
-            query_emb = model.encode([edu])[0].tolist()
-            result = session.run("""
-                CALL db.index.vector.queryNodes('education_embedding_cos', $top_k, $embedding)
-                YIELD node, score
-                RETURN node.name AS name, score
-            """, top_k=1, embedding=query_emb)
-            result = list(result)
+            
+            
+            education = search_edu(edu,session)
+            if not education:
+                query_emb = model.encode([edu])[0].tolist()
+                session.execute_write(add_edu,edu,query_emb)
+                education = edu
 
-            if len(result)==0:
-                session.write_transaction(add_edu,edu,query_emb)
-                session.write_transaction(add_req_usertoedu,str(resultdb.inserted_id),edu)
-                continue
-
-            matching = result[0]["name"]
-            if float(result[0]["score"])<0.9:
-                session.write_transaction(add_edu,edu,query_emb)
-                matching = edu
-
-            session.write_transaction(add_req_usertoedu,str(resultdb.inserted_id),matching)
+            session.write_transaction(add_req_usertoedu,str(resultdb.inserted_id),education)
         
 
     driver.close()
@@ -314,31 +291,20 @@ def addJob(jobdata):
 
         #add skills
         for skill in jobdata['skills']:
-            query_emb = model.encode([skill.lower()])[0].tolist()
-            result = session.run("""
-                CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
-                YIELD node, score
-                RETURN node.name AS name, score
-            """, top_k=1, embedding=query_emb)
-            result = list(result)
-            if float(result[0]["score"])<0.8:
-                # session.write_transaction(add_skill,skill,query_emb)
-                # session.write_transaction(add_relation_jobtoskill,jobdata['title'],skill)
-                continue
-            session.execute_write(add_relation_jobtoskill,str(resultdb.inserted_id),result[0]["name"])
+            skill = skill.lower()
+            s = search_skills(skill=skill,session=session)
+            if not s:
+                query_emb = model.encode([skill])[0].tolist()
+                session.execute_write(add_skill,skill,query_emb)
+                s = skill
+                with open("missing_skills.txt", "a", encoding="utf-8") as f:
+                    f.write(skill + "\n")
+            session.execute_write(add_relation_jobtoskill,str(resultdb.inserted_id),s)
 
         #add exp
 
         for expdata in jobdata["experiences"]:
             exp = expdata["job_name"].lower()
-            query_emb = model.encode([exp])[0].tolist()
-
-            result = session.run("""
-                CALL db.index.vector.queryNodes('experience_embedding_cos', $top_k, $embedding)
-                YIELD node, score
-                RETURN node.name AS name, score
-            """, top_k=1, embedding=query_emb)
-            result = list(result)
 
             min_year = int(expdata["min_experience_years"])
             if expdata["max_experience_years"]:
@@ -346,42 +312,29 @@ def addJob(jobdata):
             else:
                 max_year=min_year
             
-            if len(result)==0:
-                session.execute_write(add_exp,exp,query_emb)
-                session.execute_write(add_req_jobtoexp,str(resultdb.inserted_id),exp,min_year,max_year)
-                continue
-                
-            matching = result[0]["name"]
-            if float(result[0]["score"])<0.9:
-                session.execute_write(add_exp,exp,query_emb)
-                matching = exp
+            experiences = search_exp(exp=exp,session=session)
 
-            session.execute_write(add_req_jobtoexp,str(resultdb.inserted_id),matching,min_year,max_year)
+            if not experiences:
+                query_emb = model.encode([exp])[0].tolist()
+                session.execute_write(add_exp,exp,query_emb)
+                experiences = exp
+                
+            session.execute_write(add_req_jobtoexp,str(resultdb.inserted_id),experiences,min_year,max_year)
 
         #add edu
         for edudata in jobdata['educations']:
 
             for edu in edudata["education"]:
                 edu=edu.lower()
-                query_emb = model.encode([edu])[0].tolist()
-                result = session.run("""
-                    CALL db.index.vector.queryNodes('education_embedding_cos', $top_k, $embedding)
-                    YIELD node, score
-                    RETURN node.name AS name, score
-                """, top_k=1, embedding=query_emb)
-                result = list(result)
 
-                if len(result)==0:
+                education = search_edu(edu=edu,session=session)
+
+                if not education:
+                    query_emb = model.encode([edu])[0].tolist()
                     session.execute_write(add_edu,edu,query_emb)
-                    session.execute_write(add_req_jobtoedu,str(resultdb.inserted_id),edu,edudata["id"],edudata["minimum_level"])
-                    continue
+                    education = edu
 
-                matching = result[0]["name"]
-                if float(result[0]["score"])<0.9:
-                    session.execute_write(add_edu,edu,query_emb)
-                    matching = edu
-
-                session.execute_write(add_req_jobtoedu,str(resultdb.inserted_id),matching,edudata["id"],edudata["minimum_level"])
+                session.execute_write(add_req_jobtoedu,str(resultdb.inserted_id),education,edudata["id"],edudata["minimum_level"])
 
 
     driver.close()
@@ -564,7 +517,7 @@ def score_job(email):
         if s in match_skills:
             match_skills[s] += 0.2
         else:
-            match_skills[s] = 0.5
+            match_skills[s] = 0.2
         if match_skills[s] > 1:
             match_skills[s]=1
 
@@ -716,3 +669,134 @@ def extractScore_qualifications_GPT(Candidate_data,job_data):
     response = requests.post(url, json=payload)
     
     return response.json()["response"]
+
+def search_skills(skill,session):
+
+    skill = skill.lower()
+
+    #match name
+    record = session.run("""
+            MATCH (s:Skill)
+            WHERE s.name = $skill
+            RETURN s.name AS name
+            LIMIT 1
+        """, skill=skill).single()
+
+    if record:
+        return record["name"]
+    
+    #match find text
+    result = session.run("""
+        CALL db.index.fulltext.queryNodes("skillIndex", $q)
+        YIELD node, score
+        RETURN node.name, score
+        ORDER BY score DESC
+        LIMIT 1;
+        """, q=skill)
+    
+    record = result.single()
+    if record:
+        best_match_name = record["node.name"]
+        best_match_score = record["score"]
+        if best_match_score > 1.5:
+            return best_match_name
+
+    #match llm
+    query_emb = model.encode([skill])[0].tolist()
+    result = session.run("""
+        CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
+        YIELD node, score
+        RETURN node.name AS name, score
+        """, top_k=1, embedding=query_emb)
+    result = list(result)
+    if result and float(result[0]["score"])>=0.8:
+        return result[0]["name"]
+
+    return ""
+
+def search_exp(exp,session):
+
+    exp = exp.lower()
+
+    #match name
+    record = session.run("""
+            MATCH (s:Experience)
+            WHERE s.name = $exp
+            RETURN s.name AS name
+            LIMIT 1
+        """, exp=exp).single()
+
+    if record:
+        return record["name"]
+    
+    #match find text
+    result = session.run("""
+        CALL db.index.fulltext.queryNodes("expIndex", $q)
+        YIELD node, score
+        RETURN node.name, score
+        ORDER BY score DESC
+        LIMIT 1;
+        """, q=exp)
+    record = result.single()
+    if record:
+        best_match_name = record["node.name"]
+        best_match_score = record["score"]
+        if best_match_score > 1.5:
+            return best_match_name
+
+    #match llm
+    query_emb = model.encode([exp])[0].tolist()
+    result = session.run("""
+        CALL db.index.vector.queryNodes('experience_embedding_cos', $top_k, $embedding)
+        YIELD node, score
+        RETURN node.name AS name, score
+        """, top_k=1, embedding=query_emb)
+    result = list(result)
+    if result and float(result[0]["score"])>=0.95:
+        return result[0]["name"]
+
+    return ""
+
+def search_edu(edu,session):
+
+    edu = edu.lower()
+
+    #match name
+    record = session.run("""
+            MATCH (s:Education)
+            WHERE s.name = $edu
+            RETURN s.name AS name
+            LIMIT 1
+        """, edu=edu).single()
+
+    if record:
+        return record["name"]
+    
+    #match find text
+    result = session.run("""
+        CALL db.index.fulltext.queryNodes("eduIndex", $q)
+        YIELD node, score
+        RETURN node.name, score
+        ORDER BY score DESC
+        LIMIT 1;
+        """, q=edu)
+    
+    record = result.single()
+    if record:
+        best_match_name = record["node.name"]
+        best_match_score = record["score"]
+        if best_match_score > 1.5:
+            return best_match_name
+
+    #match llm
+    query_emb = model.encode([edu])[0].tolist()
+    result = session.run("""
+        CALL db.index.vector.queryNodes('education_embedding_cos', $top_k, $embedding)
+        YIELD node, score
+        RETURN node.name AS name, score
+        """, top_k=1, embedding=query_emb)
+    result = list(result)
+    if result and float(result[0]["score"])>=0.95:
+        return result[0]["name"]
+
+    return ""

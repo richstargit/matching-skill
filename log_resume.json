@@ -1,52 +1,77 @@
 {
     "personalInfo": {
-        "fullName": "ธนกร สายประดิษฐ์",
-        "phone": "+66 912345678",
-        "email": "thanakorn.saipradit@example.com",
-        "address": "",
+        "fullName": "John Doe",
+        "phone": "+66-89-123-4567",
+        "email": "johndoe@example.com",
+        "address": "Bangkok, Thailand",
         "birthDate": null,
         "currentSalary": 0,
         "expectedSalary": 0
     },
     "skills": [
+        "JavaScript",
+        "TypeScript",
         "Python",
         "SQL",
-        "TensorFlow",
-        "PyTorch",
-        "scikit-learn",
-        "Pandas",
-        "NumPy",
-        "AWS",
+        "HTML5",
+        "CSS3",
+        "React",
+        "Next.js",
+        "Vue.js",
+        "TailwindCSS",
+        "Bootstrap",
+        "Node.js",
+        "Express.js",
+        "Django",
+        "Spring Boot",
+        "PostgreSQL",
+        "MySQL",
+        "MongoDB",
+        "Redis",
         "Docker",
         "Kubernetes",
-        "Algorithms & Data Structures",
-        "NLP",
-        "Computer Vision",
-        "Problem-solving",
-        "teamwork",
-        "communication"
+        "Git",
+        "CI/CD",
+        "AWS",
+        "Azure",
+        "Figma",
+        "Jira",
+        "Postman",
+        "VS Code"
     ],
     "experiences": [
         {
             "id": 1,
-            "role": "Machine Learning Engineer Intern",
-            "company": "AI Labs Co., Bangkok",
+            "role": "Senior Fullstack Developer",
+            "company": "Tech Solutions Co., Ltd.",
             "startDate": {
-                "month": "Jun",
+                "month": "",
                 "year": "2022"
+            },
+            "endDate": null,
+            "description": "Designed and developed scalable REST APIs using Node.js and Express.js. Built modern frontend interfaces with Next.js and TailwindCSS. Led migration from monolithic architecture to microservices. Implemented CI/CD pipelines on GitHub Actions and AWS.",
+            "isCurrentRole": true
+        },
+        {
+            "id": 2,
+            "role": "Frontend Developer",
+            "company": "StartupX",
+            "startDate": {
+                "month": "",
+                "year": "2019"
             },
             "endDate": {
-                "month": "Dec",
+                "month": "",
                 "year": "2022"
             },
-            "description": "Developed NLP models for text classification with 85% accuracy. Implemented computer vision pipelines for image recognition tasks. Collaborated with software engineers to integrate ML models into web applications.",
+            "description": "Developed responsive UI components with React and Vue.js. Optimized page performance and reduced load time by 40%. Collaborated with UX/UI designers to implement new features. Integrated frontend with backend APIs.",
             "isCurrentRole": false
         }
     ],
     "education": [
         {
             "id": 1,
-            "degree": "Master",
+            "degree": "Bachelor",
             "institution": "Chulalongkorn University",
             "faculty": "",
             "major": "Computer Science",
@@ -56,24 +81,7 @@
             },
             "endDate": {
                 "month": "",
-                "year": "2022"
-            },
-            "gpa": "",
-            "isCurrentlyStudying": false
-        },
-        {
-            "id": 2,
-            "degree": "Bachelor",
-            "institution": "Kasetsart University",
-            "faculty": "",
-            "major": "Data Science",
-            "startDate": {
-                "month": "",
-                "year": ""
-            },
-            "endDate": {
-                "month": "",
-                "year": "2020"
+                "year": "2019"
             },
             "gpa": "",
             "isCurrentlyStudying": false
@@ -82,21 +90,23 @@
     "certificates": [
         {
             "id": 1,
-            "name": "TensorFlow Developer Certificate"
+            "name": "AWS Certified Solutions Architect – Associate (2023)"
         },
         {
             "id": 2,
-            "name": "AWS Machine Learning Specialty"
+            "name": "Google Professional Cloud Developer (2022)"
         }
     ],
     "achievement": [
         {
             "id": 1,
-            "title": "Movie Recommendation System",
-            "description": "Built collaborative filtering model using Python and scikit-learn.",
+            "title": "E-Commerce Platform",
+            "description": "Built a full-featured e-commerce web application with shopping cart, payment gateway, and admin dashboard.",
             "technologies": [
-                "Python",
-                "scikit-learn"
+                "Next.js",
+                "Node.js",
+                "PostgreSQL",
+                "Stripe API"
             ],
             "link": "",
             "startDate": {
@@ -107,26 +117,13 @@
         },
         {
             "id": 2,
-            "title": "Handwritten Digit Recognition",
-            "description": "CNN model implemented in TensorFlow achieving 98% accuracy.",
+            "title": "Realtime Chat App",
+            "description": "Developed a real-time chat application with WebSocket and authentication.",
             "technologies": [
-                "TensorFlow",
-                "CNN"
-            ],
-            "link": "",
-            "startDate": {
-                "month": "",
-                "year": ""
-            },
-            "endDate": null
-        },
-        {
-            "id": 3,
-            "title": "Sentiment Analysis on Thai Social Media",
-            "description": "Preprocessed large-scale text datasets and trained ML models.",
-            "technologies": [
-                "Python",
-                "NLP"
+                "React",
+                "Express.js",
+                "MongoDB",
+                "Socket.IO"
             ],
             "link": "",
             "startDate": {

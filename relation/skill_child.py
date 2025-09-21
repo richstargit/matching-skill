@@ -63,8 +63,8 @@ tech_skills_child = {
     # Networking / Security
     "VPN": ["Network Security"],
     "Proxy Servers": ["Network Security"],
-    "Wireless Network": ["Network Infrastructure"],
-    "Wired Network": ["Network Infrastructure"],
+    "Wireless Network": ["Network"],
+    "Wired Network": ["Network"],
     "NAS Storage": ["Storage & Backup"],
     "SAN": ["Storage & Backup"],
     "EMC Storage": ["Storage & Backup"],
@@ -77,7 +77,7 @@ tech_skills_child = {
     "Encryption": ["Cybersecurity"],
     "Penetration Testing": ["Cybersecurity"],
     "Incident Response": ["Cybersecurity"],
-    "Network Security": [],
+    "Network Security": ["Network"],
 
     # Machine Learning / AI
     "Machine Learning": ["Python"],
@@ -214,15 +214,16 @@ tech_skills_child = {
     "Compliance (GDPR, CCPA)": ["Cybersecurity"],
 
     # Network
-    "DHCP": ["Network Infrastructure"],
-    "DNS": ["Network Infrastructure"],
-    "Routing Protocols": ["Network Infrastructure"],
-    "TCP/IP": ["Network Infrastructure"],
-    "LAN Technology": ["Network Infrastructure"],
-    "WAN Load Balancers": ["Network Infrastructure"],
-    "IP Addressing": ["Network Infrastructure"],
+    "Network" : [],
+    "DHCP": ["Network"],
+    "DNS": ["Network"],
+    "Routing Protocols": ["Network"],
+    "TCP/IP": ["Network"],
+    "LAN Technology": ["Network"],
+    "WAN Load Balancers": ["Network"],
+    "IP Addressing": ["Network"],
     "IPS": ["Network Security"],
-    "Network Monitoring Tools": ["Network Infrastructure"],
+    "Network Monitoring Tools": ["Network"],
 
     # Additional Skills
     "OOP": [],

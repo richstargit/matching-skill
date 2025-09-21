@@ -7,6 +7,10 @@ Extract all available information according to the following interface and retur
 All data should be in English.
 
 Important:
+For skill
+- skills: a list of hard skills only (technical skills, tools, frameworks, libraries, platforms, programming languages).
+- Always use names can identify (e.g., "Golang", "Express.js", "React").
+- Do not use abbreviations alone (e.g., "Go" → "Golang", "Express" → "Express.js").
 
 For the Education interface, if the degree contains the major (e.g., "Bachelor of Computer Science"), separate it properly:
 
