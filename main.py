@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from connect.connectGraphDB import connectGraph
 from init import addJob, addUser, cal_score, extractData_GPT, extractJob_GPT, readPDFwithFile, score_job
+from connect.connect_mongodb import resume_collection
 
 app = FastAPI()
 
@@ -144,33 +145,25 @@ def get_jobs():
 
 @app.get("/candidate")
 def getCandidate():
-    driver = connectGraph()
-    query = """
-    MATCH (c:Candidate)
-OPTIONAL MATCH (c)-[:HAVE_SKILL]->(s:Skill)
-OPTIONAL MATCH (s)-[:HAS_SKILL*]->(related:Skill)
-WITH c, collect(DISTINCT s.name) + collect(DISTINCT related.name) AS skills
-RETURN c.name AS name, skills,
-       coalesce(c.experiences, '[]') AS experiences,
-       coalesce(c.education, '[]') AS education,
-       coalesce(c.certificates, '[]') AS certificates,
-       coalesce(c.achievement, '[]') AS achievements,
-       coalesce(c.personalInfo, '{}') AS personalInfo
-    """
-    
+    result = resume_collection.find({}, {"_id": 1, "personalInfo.email": 1})
+
     candidates = []
-    with driver.session() as session:
-        result = session.run(query)
-        for record in result:
-            candidates.append({
-                "name": record["name"],
-                "skills": record["skills"],  # skills จาก relation
-                "experiences": json.loads(record["experiences"]) if record["experiences"] else [],
-                "education": json.loads(record["education"]) if record["education"] else [],
-                "certificates": json.loads(record["certificates"]) if record["certificates"] else [],
-                "achievements": json.loads(record["achievements"]) if record["achievements"] else [],
-                "personalInfo": json.loads(record["personalInfo"]) if record["personalInfo"] else {}
-            })
-    driver.close()
+    for candidate in result:
+        candidates.append({
+            "id": str(candidate["_id"]),
+            "email": candidate.get("personalInfo", {}).get("email", None)
+        })
     return {"candidates": candidates}
+
+@app.get("/candidate/{email}")
+def get_candidate_by_email(email: str):
+
+    candidate = resume_collection.find_one({"personalInfo.email": email})
+
+    if candidate:
+
+        candidate["_id"] = str(candidate["_id"])
+        return candidate
+    else:
+        return {"error": "Candidate not found"}
     
