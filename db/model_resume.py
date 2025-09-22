@@ -11,6 +11,7 @@ class DateInfo(BaseModel):
 class Experience(BaseModel):
     id: int
     role: str
+    level:str
     company: str
     startDate: DateInfo
     endDate: Optional[DateInfo] = None

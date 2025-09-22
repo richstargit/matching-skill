@@ -1,9 +1,15 @@
-bootstrap
+-bootstrap
 redis
 git
 figma
 jira
 postman
-html5
+-html5
 access
-.net core
+-.net core
+-selenium
+-C
+-Sql servergoogle maps
+here
+github actions
+angular

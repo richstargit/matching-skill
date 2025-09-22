@@ -42,19 +42,21 @@
     "experiences": [
         {
             "id": 1,
-            "role": "Senior Fullstack Developer",
+            "role": "Fullstack Developer",
+            "level": "Senior",
             "company": "Tech Solutions Co., Ltd.",
             "startDate": {
                 "month": "",
                 "year": "2022"
             },
             "endDate": null,
-            "description": "Designed and developed scalable REST APIs using Node.js and Express.js. Built modern frontend interfaces with Next.js and TailwindCSS. Led migration from monolithic architecture to microservices. Implemented CI/CD pipelines on GitHub Actions and AWS.",
+            "description": "Designed and developed scalable REST APIs using Node.js and Express.js; Built modern frontend interfaces with Next.js and TailwindCSS; Led migration from monolithic architecture to microservices; Implemented CI/CD pipelines on GitHub Actions and AWS",
             "isCurrentRole": true
         },
         {
             "id": 2,
             "role": "Frontend Developer",
+            "level": "",
             "company": "StartupX",
             "startDate": {
                 "month": "",
@@ -64,7 +66,7 @@
                 "month": "",
                 "year": "2022"
             },
-            "description": "Developed responsive UI components with React and Vue.js. Optimized page performance and reduced load time by 40%. Collaborated with UX/UI designers to implement new features. Integrated frontend with backend APIs.",
+            "description": "Developed responsive UI components with React and Vue.js; Optimized page performance and reduced load time by 40%; Collaborated with UX/UI designers to implement new features; Integrated frontend with backend APIs",
             "isCurrentRole": false
         }
     ],

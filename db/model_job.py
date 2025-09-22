@@ -3,6 +3,7 @@ from typing import List, Optional
 
 class Experience(BaseModel):
     job_name: str
+    level:str
     min_experience_years: Optional[int] = None
     max_experience_years: Optional[int] = None
     description: str

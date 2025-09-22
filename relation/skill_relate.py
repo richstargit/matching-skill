@@ -3,9 +3,11 @@ tech_skills_relate = {
     "TypeScript": ["JavaScript"],
     "Kotlin": ["Java"],
     "Dart": ["Flutter"],
+    "C":["C++"],
     
     # Frontend / Frameworks
     "Tailwind": ["CSS3"],  # Tailwind เป็น CSS Framework
+    "bootstrap":["CSS3"],
     "Vite": ["Webpack"],   # ทั้งคู่เป็น build tools
     
     # Backend / Web Frameworks
@@ -13,7 +15,7 @@ tech_skills_relate = {
     "REST API":["REST"],
     
     # Databases
-    "MySQL": ["SQL"],
+    "MySQL": ["SQL","Sql server"],
     "PostgreSQL": ["SQL"],
     "Oracle": ["SQL"],
     "MongoDB": ["NoSQL"],

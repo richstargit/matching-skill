@@ -1,7 +1,9 @@
 tech_skills_child = {
     # Programming Languages
     "TypeScript": [],
-    "JavaScript": [],
+    "HTML5":[],
+    "CSS3":["HTML5"],
+    "JavaScript": ["HTML5"],
     "Java":[],
     "Kotlin": ["Flutter"],
     "Swift": ["Flutter"],
@@ -23,6 +25,7 @@ tech_skills_child = {
     "Vite": ["JavaScript"],
     "Webpack": ["JavaScript"],
     "Storybook": ["React", "Vue.js"],
+    ".net core":["C#"],
 
     # Backend / Web Frameworks
     "Node.js": ["JavaScript"],
@@ -31,8 +34,9 @@ tech_skills_child = {
     "FastAPI": ["Python"],
     "Flask": ["Python"],
     "Django": ["Python"],
-    "REST API": ["Backend Development"],
+    "REST API": ["Backend Development","postman"],
     "REST":[],
+    
 
     # Databases
     "MySQL": [],
@@ -41,6 +45,7 @@ tech_skills_child = {
     "MongoDB": [],
     "NoSQL": [],
     "SQL": [],
+    "Sql server":[],
 
     # Cloud
     "AWS CLI": [],
@@ -140,6 +145,8 @@ tech_skills_child = {
     "Performance Testing": ["Software Testing"],
     "Test Automation": ["Software Testing"],
     "Test-Driven Development (TDD)": ["Software Testing"],
+    "Selenium":["Python"],
+    "postman":[],
 
     # DevOps / CI-CD
     "CI/CD": [],
@@ -228,4 +235,5 @@ tech_skills_child = {
     # Additional Skills
     "OOP": [],
     "System Design": [],
+    "VS Code":[],
 }

@@ -168,22 +168,24 @@ def add_relation_jobtoskill(tx, job,skill):
         MERGE (c)-[:REQUIRED_SKILL]->(s)
     """, job=job, skill=skill)
 
-def add_req_usertoexp(tx, mongodb_id,exp,exp_year):
+def add_req_usertoexp(tx, mongodb_id,exp,exp_year,level):
     tx.run("""
         MATCH (c:Resume {mongodb_id: $mongodb_id})
         MATCH (s:Experience {name: $exp})
         MERGE (c)-[r:Experience_in]->(s)
-        SET r.exp_year = $exp_year
-    """, mongodb_id=mongodb_id, exp=exp,exp_year=exp_year)
+        SET r.exp_year = $exp_year,
+           r.level = $level
+    """, mongodb_id=mongodb_id, exp=exp,exp_year=exp_year,level=level)
 
-def add_req_jobtoexp(tx, mongodb_id,exp,min_year,max_year):
+def add_req_jobtoexp(tx, mongodb_id,exp,min_year,max_year,level):
     tx.run("""
         MATCH (c:Job {mongodb_id: $mongodb_id})
         MATCH (s:Experience {name: $exp})
         MERGE (c)-[r:REQUIRED_Experience]->(s)
         SET r.min_year = $min_year,
-           r.max_year = $max_year
-    """, mongodb_id=mongodb_id, exp=exp,min_year=min_year,max_year=max_year)
+           r.max_year = $max_year,
+           r.level = $level
+    """, mongodb_id=mongodb_id, exp=exp,min_year=min_year,max_year=max_year,level=level)
 
 def add_req_usertoedu(tx, mongodb_id,edu):
     tx.run("""
@@ -256,13 +258,14 @@ def addUser(userdata):
                 now = datetime.datetime.now()
                 end_year = now.year
             
+            level = expdata['level'].lower()
             experience = search_exp(exp,session)
             if not experience:
                 query_emb = model.encode([exp])[0].tolist()
                 session.execute_write(add_exp,exp,query_emb)
                 experience = exp
 
-            session.write_transaction(add_req_usertoexp,str(resultdb.inserted_id),experience,end_year-start_year)
+            session.write_transaction(add_req_usertoexp,str(resultdb.inserted_id),experience,end_year-start_year,level)
         
         #add edu
         for edudata in userdata['education']:
@@ -311,7 +314,8 @@ def addJob(jobdata):
                 max_year = int(expdata["max_experience_years"])
             else:
                 max_year=min_year
-            
+
+            level = expdata['level'].lower()
             experiences = search_exp(exp=exp,session=session)
 
             if not experiences:
@@ -319,7 +323,7 @@ def addJob(jobdata):
                 session.execute_write(add_exp,exp,query_emb)
                 experiences = exp
                 
-            session.execute_write(add_req_jobtoexp,str(resultdb.inserted_id),experiences,min_year,max_year)
+            session.execute_write(add_req_jobtoexp,str(resultdb.inserted_id),experiences,min_year,max_year,level)
 
         #add edu
         for edudata in jobdata['educations']:
@@ -409,6 +413,11 @@ def find_resume_skill_by_mongodb_id(mongodb_id):
         record = result.single()
 
     driver.close()
+    if record is None:
+        return{
+        "skills":[],
+        "childSkills":[]
+    }
     return {
         "skills":record["skills"],
         "childSkills":record["childSkills"]
@@ -451,7 +460,8 @@ def find_exp_edu_by_mongodb_id(mongodb_id):
     driver = connectGraph()
     with driver.session() as session:
         result = session.run("""
-                MATCH p=(r:Resume {mongodb_id: $mongodb_id})-[w_exp:Experience_in]->(exp:Experience)
+                MATCH p=(r:Resume {mongodb_id: $mongodb_id})
+                             OPTIONAL MATCH (r)-[w_exp:Experience_in]->(exp:Experience)
                 OPTIONAL MATCH p2 = (r)-[:Education_in]->(edu:Education)
                 RETURN r.name as name, collect(DISTINCT {name : exp.name,year:w_exp.exp_year}) as exp, collect(DISTINCT edu.name) as edu;
             """, mongodb_id=mongodb_id)
@@ -525,7 +535,8 @@ def score_job(email):
     exp_year = {}
 
     for e in resume_exp_edu["exp"]:
-        exp_year[e["name"]]=e["year"]
+        if e["name"]:
+            exp_year[e["name"]]=e["year"]
 
     jobs = find_job_by_mongodb_id(mongodb_id)
     
@@ -752,7 +763,7 @@ def search_exp(exp,session):
         RETURN node.name AS name, score
         """, top_k=1, embedding=query_emb)
     result = list(result)
-    if result and float(result[0]["score"])>=0.95:
+    if result and float(result[0]["score"])>=0.9:
         return result[0]["name"]
 
     return ""

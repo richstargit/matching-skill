@@ -13,16 +13,19 @@ For skill
 - Do not use abbreviations alone (e.g., "Go" → "Golang", "Express" → "Express.js").
 
 For the Education interface, if the degree contains the major (e.g., "Bachelor of Computer Science"), separate it properly:
+-degree: "Bachelor"
+-major: "Computer Science"
 
-degree: "Bachelor"
-
-major: "Computer Science"
+For Experience:
+- Separate the level (e.g., "junior", "senior" lower all) into the role field. Example: if the title is "Senior Software Engineer", then role: "Software Engineer" and an additional field "level": "Senior".
+- If no level is provided, set "level": "".
 
 interface definitions:
 
 interface Experience {
   id: int;
   role: string;
+  level: string;
   company: string;
   startDate: { month: string; year: string };
   endDate: { month: string; year: string } | null;
@@ -86,15 +89,22 @@ Extraction rules:
 - skills: a list of hard skills only (technical skills, tools, frameworks, libraries, platforms, programming languages).
   - Always use names can identify (e.g., "Golang", "Express.js", "React").
   - Do not use abbreviations alone (e.g., "Go" → "Golang", "Express" → "Express.js").
-- experiences: a list of required work experiences (position role) and find experience if not find give 0. Each item must have the format:
+- experiences: a list of required work experiences (position role) and find experience year if not find give 0. Each item must have the format:
   {
-    "job_name": "Position or role *only if 'or' crate new value",
+    "job_name": "Position or role (if multiple roles separated by 'or', create a new entry for each)",
+    "level": "e.g., Junior, Senior (if not specified, use empty string '')",
     "min_experience_years": 0,
     "max_experience_years": 0,
     "description": "Experience requirement text from the JD"
   }
   - If only a minimum is provided (e.g., "3+ years"), set "max_experience_years": null.
   - If a range is given (e.g., "3–5 years"), fill both min and max.
+  Special rules for experience:
+  - If both "Junior" and "Senior" are mentioned for the same role with different minimum years, 
+    then combine them into a single record:
+    - Set "min_experience_years" = the minimum for Junior.
+    - Set "max_experience_years" = the minimum for Senior.
+
 - educations: a list of required education qualifications and id number only. Each item must have the format:
   {
     "id": 1,
@@ -121,6 +131,7 @@ Example output:
   "experiences": [
     {
       "job_name": "Backend Developer",
+      "level" : "senior"
       "min_experience_years": 3,
       "max_experience_years": null,
       "description": "3+ years of backend development experience"
