@@ -1,72 +1,94 @@
 {
     "personalInfo": {
-        "fullName": "John Doe",
-        "phone": "+66-89-123-4567",
-        "email": "johndoe@example.com",
+        "fullName": "Johnathan Smith",
+        "phone": "+66 98-123-4567",
+        "email": "john.smith@email.com",
         "address": "Bangkok, Thailand",
         "birthDate": null,
         "currentSalary": 0,
         "expectedSalary": 0
     },
     "skills": [
-        "JavaScript",
-        "TypeScript",
-        "Python",
-        "SQL",
-        "HTML5",
-        "CSS3",
         "React",
         "Next.js",
         "Vue.js",
-        "TailwindCSS",
-        "Bootstrap",
+        "Angular",
+        "Tailwind",
+        "Redux",
+        "TypeScript",
         "Node.js",
         "Express.js",
+        "NestJS",
         "Django",
-        "Spring Boot",
+        "Flask",
+        "Golang",
+        "GraphQL",
+        "REST API",
         "PostgreSQL",
         "MySQL",
         "MongoDB",
         "Redis",
+        "Elasticsearch",
+        "AWS",
         "Docker",
         "Kubernetes",
-        "Git",
-        "CI/CD",
-        "AWS",
-        "Azure",
-        "Figma",
-        "Jira",
-        "Postman",
-        "VS Code"
+        "Terraform",
+        "GitHub Actions",
+        "Jenkins",
+        "GitLab CI",
+        "Jest",
+        "Mocha",
+        "Cypress",
+        "Playwright",
+        "Selenium",
+        "Kafka",
+        "RabbitMQ",
+        "Agile"
     ],
     "experiences": [
         {
             "id": 1,
-            "role": "Fullstack Developer",
+            "role": "Full Stack Developer",
             "level": "Senior",
-            "company": "Tech Solutions Co., Ltd.",
+            "company": "Grab Holdings Inc.",
             "startDate": {
-                "month": "",
-                "year": "2022"
+                "month": "Jan",
+                "year": "2020"
             },
             "endDate": null,
-            "description": "Designed and developed scalable REST APIs using Node.js and Express.js; Built modern frontend interfaces with Next.js and TailwindCSS; Led migration from monolithic architecture to microservices; Implemented CI/CD pipelines on GitHub Actions and AWS",
+            "description": "Designed and developed real-time ride-hailing and payment systems serving millions of users daily. Migrated legacy monolithic services to microservices on Kubernetes, improving scalability and reducing downtime by 40%. Implemented CI/CD pipelines with GitHub Actions and ArgoCD, cutting deployment time from hours to minutes. Built internal dashboard with React + Next.js for driver analytics, reducing manual reporting efforts by 70%. Mentored 6+ junior developers and conducted regular code reviews.",
             "isCurrentRole": true
         },
         {
             "id": 2,
-            "role": "Frontend Developer",
+            "role": "Full Stack Developer",
             "level": "",
-            "company": "StartupX",
+            "company": "Agoda",
             "startDate": {
-                "month": "",
-                "year": "2019"
+                "month": "May",
+                "year": "2016"
             },
             "endDate": {
-                "month": "",
-                "year": "2022"
+                "month": "Dec",
+                "year": "2019"
             },
-            "description": "Developed responsive UI components with React and Vue.js; Optimized page performance and reduced load time by 40%; Collaborated with UX/UI designers to implement new features; Integrated frontend with backend APIs",
+            "description": "Developed scalable hotel booking platform features using Node.js, React, and GraphQL. Improved search performance by optimizing Elasticsearch queries, reducing latency by 35%. Integrated machine learning APIs for personalized recommendations. Collaborated with product managers, UX/UI teams, and backend engineers in an Agile environment.",
+            "isCurrentRole": false
+        },
+        {
+            "id": 3,
+            "role": "Software Engineer",
+            "level": "",
+            "company": "IBM",
+            "startDate": {
+                "month": "Jan",
+                "year": "2013"
+            },
+            "endDate": {
+                "month": "Apr",
+                "year": "2016"
+            },
+            "description": "Built enterprise web apps for banking clients using Java Spring Boot + Angular. Designed secure authentication systems (OAuth2, JWT) for financial platforms. Optimized SQL queries for high-volume transactional databases.",
             "isCurrentRole": false
         }
     ],
@@ -76,14 +98,14 @@
             "degree": "Bachelor",
             "institution": "Chulalongkorn University",
             "faculty": "",
-            "major": "Computer Science",
+            "major": "Computer Engineering",
             "startDate": {
                 "month": "",
                 "year": ""
             },
             "endDate": {
                 "month": "",
-                "year": "2019"
+                "year": "2012"
             },
             "gpa": "",
             "isCurrentlyStudying": false
@@ -92,23 +114,26 @@
     "certificates": [
         {
             "id": 1,
-            "name": "AWS Certified Solutions Architect – Associate (2023)"
+            "name": "AWS Certified Solutions Architect – Professional"
         },
         {
             "id": 2,
-            "name": "Google Professional Cloud Developer (2022)"
+            "name": "Certified Kubernetes Administrator (CKA)"
+        },
+        {
+            "id": 3,
+            "name": "Google Professional Cloud Developer"
         }
     ],
     "achievement": [
         {
             "id": 1,
             "title": "E-Commerce Platform",
-            "description": "Built a full-featured e-commerce web application with shopping cart, payment gateway, and admin dashboard.",
+            "description": "Built a full-featured e-commerce platform with Next.js, Node.js, and MongoDB (2,000+ GitHub stars).",
             "technologies": [
                 "Next.js",
                 "Node.js",
-                "PostgreSQL",
-                "Stripe API"
+                "MongoDB"
             ],
             "link": "",
             "startDate": {
@@ -119,13 +144,26 @@
         },
         {
             "id": 2,
-            "title": "Realtime Chat App",
-            "description": "Developed a real-time chat application with WebSocket and authentication.",
+            "title": "Chat Application",
+            "description": "Real-time chat app using WebSocket + Redis, supporting 10K concurrent users.",
             "technologies": [
-                "React",
-                "Express.js",
-                "MongoDB",
-                "Socket.IO"
+                "WebSocket",
+                "Redis"
+            ],
+            "link": "",
+            "startDate": {
+                "month": "",
+                "year": ""
+            },
+            "endDate": null
+        },
+        {
+            "id": 3,
+            "title": "DevOps Automation Scripts",
+            "description": "Terraform and Ansible scripts for cloud infrastructure provisioning.",
+            "technologies": [
+                "Terraform",
+                "Ansible"
             ],
             "link": "",
             "startDate": {

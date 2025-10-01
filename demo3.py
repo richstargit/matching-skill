@@ -7,7 +7,7 @@ def search_skills(skill,session):
 
     #match name
     record = session.run("""
-            MATCH (s:Experience)
+            MATCH (s:Skill)
             WHERE s.name = $skill
             RETURN s.name AS name
             LIMIT 1
@@ -18,7 +18,7 @@ def search_skills(skill,session):
     
     #match find text
     result = session.run("""
-        CALL db.index.fulltext.queryNodes("expIndex", $q)
+        CALL db.index.fulltext.queryNodes("skillIndex", $q)
         YIELD node, score
         RETURN node.name, score
         ORDER BY score DESC
@@ -35,7 +35,7 @@ def search_skills(skill,session):
     #match llm
     query_emb = model.encode([skill.lower()])[0].tolist()
     result = session.run("""
-        CALL db.index.vector.queryNodes('experience_embedding_cos', $top_k, $embedding)
+        CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
         YIELD node, score
         RETURN node.name AS name, score
         """, top_k=1, embedding=query_emb)

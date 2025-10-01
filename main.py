@@ -117,7 +117,8 @@ async def addjob(candidate: Candidate):
 def get_jobs():
     driver = connectGraph()
     query = """
-    MATCH (j:Job)-[:REQUIRED_SKILL]->(skill2:Skill)
+    MATCH (j:Job)
+OPTIONAL MATCH (j)-[:REQUIRED_SKILL]->(skill2:Skill)
     OPTIONAL MATCH (j)-[w:REQUIRED_Education]->(ej:Education)
     OPTIONAL MATCH (j)-[w2:REQUIRED_Experience]->(exp:Experience)
     RETURN j.name as name,

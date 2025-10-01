@@ -109,7 +109,7 @@ Extraction rules:
   {
     "id": 1,
     "education": ["Exact degree field(s). If the JD says 'or related field', replace with 3–5 most relevant academic fields instead of keeping the phrase"],
-    "minimum_level": ["Bachelor's degree" , "Master's degree" , "High School", "etc."]
+    "minimum_level": "Bachelor's degree" //or "Master's degree" "High School" "etc."
   }
 - responsibilities: a list of job duties and responsibilities as plain text.
 
@@ -157,64 +157,49 @@ Now extract from this job description:
 
   "extractScore_qualifications":{
        "system":'''
-You are an AI that evaluates the match between a candidate and a list of job postings.
+You are an AI that evaluates how well a candidate’s certificates and achievements match a job’s responsibilities.
 
 You will receive:
 
-job_data :
-A list of jobs, each with:
-- id: integer, the job identifier
-- job: string, the job title
-- qualifications: list of strings, the job requirements or qualifications
+job_data:
 
-Candidate_data: 
-- experiences: list of strings, the candidate's work experiences
-- education: list of strings, the candidate's education background
-- achievements: list of strings, the candidate's achievements or projects
+job: string, the job title
 
-Your task is to calculate how well the candidate matches each job, returning the following:
+jobid: integer, the job identifier
 
-1. score_exp: match score (0-100) based on experiences
-2. score_edu: match score (0-100) based on education
-3. score_ach: match score (0-100) based on achievements/projects
-4. exp_reasons: a list of objects that show comparisons between job requirements and candidate experiences.  
-   Each object must have:
-   - job: the requirement from the job
-   - candidate: the most relevant candidate experience (or "missing" if none found)
-   - isMatch: true if the candidate meets the requirement, false otherwise
-5. edu_reasons: a list of objects that show comparisons between job requirements and candidate education.  
-   Each object must have:
-   - job: the requirement from the job
-   - candidate: the most relevant candidate education (or "missing" if none found)
-   - isMatch: true if the candidate meets the requirement, false otherwise
-6. ach_reasons: a list of objects that show how the candidate's achievements/projects relate to the job requirements.  
-   Each object must have:
-   - job: the requirement from the job
-   - candidate: the most relevant candidate achievement/project (or "missing" if none found)
-   - reason: explanation of why it matches or is relevant
+responsibilities: list of strings, the job responsibilities
 
-Return the result in JSON format (English only) as a list. Each list item should include:
+candidate_data:
+
+certificates: list of strings, the candidate’s certificates
+
+achievements: list of strings, the candidate’s achievements or projects
+
+Your task:
+
+For each job responsibility, check if any certificate or achievement is relevant.
+
+Compute an overall score_ach (0–100) that reflects how well the candidate’s certificates/achievements align with the responsibilities.
+
+Provide ach_reasons as a list of objects showing the reasoning. Each object must include:
+
+job: the responsibility
+
+candidate: the most relevant certificate/achievement (or "missing" if none found)
+
+reason: explanation why it matches or not
+
+Return the result in JSON format like this:
 
 {
-  "id": int,
   "job": "string",
-  "score_exp": number,
-  "score_edu": number,
+  "jobid": string,
   "score_ach": number,
-  "exp_reasons": [
-    {"job": "string", "candidate": "string", "isMatch": bool},
-    ...
-  ],
-  "edu_reasons": [
-    {"job": "string", "candidate": "string", "isMatch": bool},
-    ...
-  ],
   "ach_reasons": [
     {"job": "string", "candidate": "string", "reason": "string"},
     ...
   ]
 }
-
 ''' ,
 "user":'''
 '''

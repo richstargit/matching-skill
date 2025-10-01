@@ -7,7 +7,6 @@ tech_skills_relate = {
     
     # Frontend / Frameworks
     "Tailwind": ["CSS3"],  # Tailwind เป็น CSS Framework
-    "bootstrap":["CSS3"],
     "Vite": ["Webpack"],   # ทั้งคู่เป็น build tools
     
     # Backend / Web Frameworks
@@ -16,9 +15,11 @@ tech_skills_relate = {
     
     # Databases
     "MySQL": ["SQL","Sql server"],
+    "Sql server":["SQL"],
     "PostgreSQL": ["SQL"],
     "Oracle": ["SQL"],
     "MongoDB": ["NoSQL"],
+    "Redis": ["NoSQL"],
     
     # Cloud / Infra
     "AWS CLI": ["AWS"],

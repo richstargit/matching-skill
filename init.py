@@ -1,6 +1,8 @@
 import datetime
 import json
+import re
 import PyPDF2
+from bson import ObjectId
 import requests
 from openai import OpenAI
 
@@ -8,7 +10,7 @@ import os
 from dotenv import load_dotenv
 
 from connect.connectGraphDB import connectGraph
-#from connect.connect_model import MODEL_RAG
+from connect.connect_model import MODEL_RAG
 from db.model_job import JobModel
 from db.model_resume import ResumeModel
 from prompt.prompt import PROMPT
@@ -21,7 +23,7 @@ load_dotenv()
 
 TYPHOON_KEY = os.getenv("TYPHOON_KEY")
 GPTAPI = os.getenv("GPTAPI")
-#model = MODEL_RAG
+model = MODEL_RAG
 
 def readPDF(path:str):
     try:
@@ -238,8 +240,8 @@ def addUser(userdata):
             skill = skill.lower()
             s = search_skills(skill=skill,session=session)
             if not s:
-                # query_emb = model.encode([skill])[0].tolist()
-                # session.execute_write(add_skill,skill,query_emb)
+                query_emb = model.encode([skill])[0].tolist()
+                session.execute_write(add_skill,skill,query_emb)
                 s = skill
                 with open("missing_skills.txt", "a", encoding="utf-8") as f:
                     f.write(skill + "\n")
@@ -261,8 +263,8 @@ def addUser(userdata):
             level = expdata['level'].lower()
             experience = search_exp(exp,session)
             if not experience:
-                # query_emb = model.encode([exp])[0].tolist()
-                # session.execute_write(add_exp,exp,query_emb)
+                query_emb = model.encode([exp])[0].tolist()
+                session.execute_write(add_exp,exp,query_emb)
                 experience = exp
 
             session.write_transaction(add_req_usertoexp,str(resultdb.inserted_id),experience,end_year-start_year,level)
@@ -274,8 +276,8 @@ def addUser(userdata):
             
             education = search_edu(edu,session)
             if not education:
-                # query_emb = model.encode([edu])[0].tolist()
-                # session.execute_write(add_edu,edu,query_emb)
+                query_emb = model.encode([edu])[0].tolist()
+                session.execute_write(add_edu,edu,query_emb)
                 education = edu
 
             session.write_transaction(add_req_usertoedu,str(resultdb.inserted_id),education)
@@ -297,8 +299,8 @@ def addJob(jobdata):
             skill = skill.lower()
             s = search_skills(skill=skill,session=session)
             if not s:
-                # query_emb = model.encode([skill])[0].tolist()
-                # session.execute_write(add_skill,skill,query_emb)
+                query_emb = model.encode([skill])[0].tolist()
+                session.execute_write(add_skill,skill,query_emb)
                 s = skill
                 with open("missing_skills.txt", "a", encoding="utf-8") as f:
                     f.write(skill + "\n")
@@ -319,8 +321,8 @@ def addJob(jobdata):
             experiences = search_exp(exp=exp,session=session)
 
             if not experiences:
-                # query_emb = model.encode([exp])[0].tolist()
-                # session.execute_write(add_exp,exp,query_emb)
+                query_emb = model.encode([exp])[0].tolist()
+                session.execute_write(add_exp,exp,query_emb)
                 experiences = exp
                 
             session.execute_write(add_req_jobtoexp,str(resultdb.inserted_id),experiences,min_year,max_year,level)
@@ -334,8 +336,8 @@ def addJob(jobdata):
                 education = search_edu(edu=edu,session=session)
 
                 if not education:
-                    # query_emb = model.encode([edu])[0].tolist()
-                    # session.execute_write(add_edu,edu,query_emb)
+                    query_emb = model.encode([edu])[0].tolist()
+                    session.execute_write(add_edu,edu,query_emb)
                     education = edu
 
                 session.execute_write(add_req_jobtoedu,str(resultdb.inserted_id),education,edudata["id"],edudata["minimum_level"])
@@ -594,12 +596,30 @@ def score_job(email):
                 "miss":missedu
             }
         }
+
+    ids = [ObjectId(k) for k in job_score_dict.keys()]
+
+    # ใช้ $in filter
+    jobdata = job_collection.find({"_id": {"$in": ids}},{"_id": 1, "responsibilities": 1})
+
+    res_score = score_responsibilities(result,jobdata).strip("`").replace("json", "", 1).strip()
+    res_score = json.loads(res_score)
+
+
+    for ach in res_score:
+        if ach["jobid"] in job_score_dict.keys():
+            job_score_dict[ach["jobid"]]["responsibilities"]={
+                "score":ach["score_ach"]/100,
+                "reasons":ach["ach_reasons"]
+            }
+
     return job_score_dict
 
 def cal_score(job_score):
     w_skill = 0.7
     w_exp = 0.2
     w_edu = 0.1
+    w_ach = 0.1
 
     w_list = [w_skill,w_exp,w_edu]
     cal_key = ["skill","experience","education"]
@@ -613,27 +633,16 @@ def cal_score(job_score):
                     w_list[i]+=temp
                     break
 
-    score = w_list[0]*job_score["skill"]["score"]+w_list[1]*job_score["experience"]["score"]+w_list[2]*job_score["education"]["score"]
+    score = w_list[0]*job_score["skill"]["score"]+w_list[1]*job_score["experience"]["score"]+w_list[2]*job_score["education"]["score"]+w_ach*job_score["responsibilities"]["score"]
+
+    if score > 1:
+        score = 1
 
     return score
 
-def score_qualifications(name,jobdata):
-    driver = connectGraph()
-    with driver.session() as session:
-        record = session.run("""
-            MATCH (c:Candidate {name: $name})
-            RETURN c.experiences AS experiences,c.education AS education,c.achievement AS achievement
-        """, name=name).single()
-        if not record:
-            return []
-    experiences_json = record["experiences"]
-    experiences = json.loads(experiences_json)
-    education_json = record["education"]
-    education = json.loads(education_json)
-    achievement_json = record['achievement']
-    achievement = json.loads(achievement_json)
-    res = extractScore_qualifications_GPT({"experiences":experiences,"education":education,"achievement":achievement},[{"id":j["id"],"job":j["job"],"qualifications":j['qualifications']} for j in jobdata]).strip("`").replace("json", "", 1).strip()
-    driver.close()
+def score_responsibilities(userdata,jobdata):
+    
+    res = extractScore_qualifications_GPT({"certificates":userdata["certificates"],"achievement":userdata["achievement"]},[{"id":str(j["_id"]),"responsibilities":j['responsibilities']} for j in jobdata]).strip("`").replace("json", "", 1).strip()
     return res
 
 def extractScore_qualifications(Candidate_data,job_data):
@@ -669,7 +678,6 @@ job_data : {}
 def extractScore_qualifications_GPT(Candidate_data,job_data):
 
     prompt = "System :\n" + PROMPT['extractScore_qualifications']['system'] + "\n\nUser Input:\n" + "Candidate_data: {}\njob_data : {}".format(Candidate_data,job_data)
-
     url = GPTAPI
     payload = {
         "model": "gpt-oss:120b",
@@ -681,9 +689,15 @@ def extractScore_qualifications_GPT(Candidate_data,job_data):
     
     return response.json()["response"]
 
+def escape_lucene(term: str) -> str:
+    # escape lucene special chars: + - && || ! ( ) { } [ ] ^ " ~ * ? : \ /
+    lucene_specials = r'([+\-!(){}[\]^"~*?:\\/]|&&|\|\|)'
+    return re.sub(lucene_specials, r'\\\1', term)
+
 def search_skills(skill,session):
 
     skill = skill.lower()
+    skill = escape_lucene(skill) 
 
     #match name
     record = session.run("""
@@ -713,22 +727,22 @@ def search_skills(skill,session):
             return best_match_name
 
     #match llm
-    # query_emb = model.encode([skill])[0].tolist()
-    # result = session.run("""
-    #     CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
-    #     YIELD node, score
-    #     RETURN node.name AS name, score
-    #     """, top_k=1, embedding=query_emb)
-    # result = list(result)
-    # if result and float(result[0]["score"])>=0.8:
-    #     return result[0]["name"]
+    query_emb = model.encode([skill])[0].tolist()
+    result = session.run("""
+        CALL db.index.vector.queryNodes('skill_embedding_cos', $top_k, $embedding)
+        YIELD node, score
+        RETURN node.name AS name, score
+        """, top_k=1, embedding=query_emb)
+    result = list(result)
+    if result and float(result[0]["score"])>=0.8:
+        return result[0]["name"]
 
     return ""
 
 def search_exp(exp,session):
 
     exp = exp.lower()
-
+    exp = escape_lucene(exp)
     #match name
     record = session.run("""
             MATCH (s:Experience)
@@ -756,21 +770,22 @@ def search_exp(exp,session):
             return best_match_name
 
     #match llm
-    # query_emb = model.encode([exp])[0].tolist()
-    # result = session.run("""
-    #     CALL db.index.vector.queryNodes('experience_embedding_cos', $top_k, $embedding)
-    #     YIELD node, score
-    #     RETURN node.name AS name, score
-    #     """, top_k=1, embedding=query_emb)
-    # result = list(result)
-    # if result and float(result[0]["score"])>=0.9:
-    #     return result[0]["name"]
+    query_emb = model.encode([exp])[0].tolist()
+    result = session.run("""
+        CALL db.index.vector.queryNodes('experience_embedding_cos', $top_k, $embedding)
+        YIELD node, score
+        RETURN node.name AS name, score
+        """, top_k=1, embedding=query_emb)
+    result = list(result)
+    if result and float(result[0]["score"])>=0.9:
+        return result[0]["name"]
 
     return ""
 
 def search_edu(edu,session):
 
     edu = edu.lower()
+    edu = escape_lucene(edu)
 
     #match name
     record = session.run("""
@@ -800,14 +815,14 @@ def search_edu(edu,session):
             return best_match_name
 
     #match llm
-    # query_emb = model.encode([edu])[0].tolist()
-    # result = session.run("""
-    #     CALL db.index.vector.queryNodes('education_embedding_cos', $top_k, $embedding)
-    #     YIELD node, score
-    #     RETURN node.name AS name, score
-    #     """, top_k=1, embedding=query_emb)
-    # result = list(result)
-    # if result and float(result[0]["score"])>=0.95:
-    #     return result[0]["name"]
+    query_emb = model.encode([edu])[0].tolist()
+    result = session.run("""
+        CALL db.index.vector.queryNodes('education_embedding_cos', $top_k, $embedding)
+        YIELD node, score
+        RETURN node.name AS name, score
+        """, top_k=1, embedding=query_emb)
+    result = list(result)
+    if result and float(result[0]["score"])>=0.95:
+        return result[0]["name"]
 
     return ""

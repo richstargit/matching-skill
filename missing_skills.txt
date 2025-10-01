@@ -1,15 +1,40 @@
--bootstrap
-redis
-git
-figma
-jira
-postman
--html5
 access
--.net core
--selenium
--C
--Sql servergoogle maps
-here
-github actions
+redux
+scala
+graphql
+vue
 angular
+android
+solid
+hadoop
+a/b testing
+refactoring
+cisco
+fortinet
+iaas
+paas
+saas
+switching
+opc-ua
+modbus
+mqtt
+grafana
+sap
+coso ii
+international audit standards
+legal drafting
+contract negotiation
+mergers and acquisitions
+corporate registration
+intellectual property law
+thai language proficiency
+bash
+pandas
+numpy
+nestjs
+elasticsearch
+jest
+mocha
+cypress
+playwright
+rabbitmq

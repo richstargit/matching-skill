@@ -26,6 +26,7 @@ tech_skills_child = {
     "Webpack": ["JavaScript"],
     "Storybook": ["React", "Vue.js"],
     ".net core":["C#"],
+    "Bootstrap": ["CSS3", "HTML5"],
 
     # Backend / Web Frameworks
     "Node.js": ["JavaScript"],
@@ -36,6 +37,8 @@ tech_skills_child = {
     "Django": ["Python"],
     "REST API": ["Backend Development","postman"],
     "REST":[],
+    "ASP.NET": [".net core", "C#"],
+    "SOAP": ["Backend Development", "Web Services"],
     
 
     # Databases
@@ -145,7 +148,7 @@ tech_skills_child = {
     "Performance Testing": ["Software Testing"],
     "Test Automation": ["Software Testing"],
     "Test-Driven Development (TDD)": ["Software Testing"],
-    "Selenium":["Python"],
+    "Selenium":["Python","Software Testing"],
     "postman":[],
 
     # DevOps / CI-CD
@@ -154,6 +157,10 @@ tech_skills_child = {
     "GitLab CI": ["CI/CD"],
     "Helm": ["Kubernetes"],
     "Kubernetes Operators": ["Kubernetes"],
+    "Git": [],
+    "GitHub": ["Git"],
+    "Jira": ["Project Management", "Agile"],
+    "Figma": ["UI/UX Design", "Design Tools"],
 
     # Methodologies / PM
     "Agile": [],
